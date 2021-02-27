@@ -6,15 +6,17 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // HEIKIN-ASHI
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<HeikinAshiResult> GetHeikinAshi<TQuote>(
             IEnumerable<TQuote> history)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateHeikinAshi(history);
 
             // initialize
@@ -23,6 +25,7 @@ namespace Skender.Stock.Indicators
             decimal? prevOpen = null;
             decimal? prevClose = null;
 
+            // roll through history
             for (int i = 0; i < historyList.Count; i++)
             {
                 TQuote h = historyList[i];
@@ -31,7 +34,8 @@ namespace Skender.Stock.Indicators
                 decimal close = (h.Open + h.High + h.Low + h.Close) / 4;
 
                 // open
-                decimal open = (prevOpen == null) ? (h.Open + h.Close) / 2 : (decimal)(prevOpen + prevClose) / 2;
+                decimal open = (prevOpen == null) ? (h.Open + h.Close) / 2
+                    : (decimal)(prevOpen + prevClose) / 2;
 
                 // high
                 decimal[] arrH = { h.High, open, close };
@@ -61,7 +65,9 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateHeikinAshi<TQuote>(IEnumerable<TQuote> history) where TQuote : IQuote
+        private static void ValidateHeikinAshi<TQuote>(
+            IEnumerable<TQuote> history)
+            where TQuote : IQuote
         {
 
             // check history
@@ -70,14 +76,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Heikin-Ashi.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

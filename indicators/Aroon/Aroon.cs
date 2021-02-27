@@ -7,16 +7,18 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // AROON OSCILLATOR
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<AroonResult> GetAroon<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 25)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateAroon(history, lookbackPeriod);
 
             // initialize
@@ -70,22 +72,27 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateAroon<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod)
+        private static void ValidateAroon<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
-            // check parameters
+
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
                     "Lookback period must be greater than 0 for Aroon.");
             }
 
-            // checked history
+            // check history
             int qtyHistory = history.Count();
             int minHistory = lookbackPeriod;
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Aroon.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
@@ -93,5 +100,4 @@ namespace Skender.Stock.Indicators
             }
         }
     }
-
 }

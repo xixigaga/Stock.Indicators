@@ -7,25 +7,26 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // BETA COEFFICIENT
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<BetaResult> GetBeta<TQuote>(
             IEnumerable<TQuote> historyMarket,
             IEnumerable<TQuote> historyEval,
             int lookbackPeriod)
             where TQuote : IQuote
         {
-            // clean quotes
+
+            // sort history
             List<TQuote> historyEvalList = historyEval.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateBeta(historyMarket, historyEval, lookbackPeriod);
 
-            // initialize results
+            // initialize
             List<BetaResult> results = new List<BetaResult>(historyEvalList.Count);
-
-            // get prerequisite data
             List<CorrResult> correlation = GetCorrelation(historyMarket, historyEval, lookbackPeriod).ToList();
 
-            // roll through history for interim data
+            // roll through history
             for (int i = 0; i < historyEvalList.Count; i++)
             {
                 TQuote e = historyEvalList[i];
@@ -50,10 +51,14 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateBeta<TQuote>(IEnumerable<TQuote> historyMarket, IEnumerable<TQuote> historyEval, int lookbackPeriod) where TQuote : IQuote
+        private static void ValidateBeta<TQuote>(
+            IEnumerable<TQuote> historyMarket,
+            IEnumerable<TQuote> historyEval,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -66,7 +71,8 @@ namespace Skender.Stock.Indicators
             if (qtyHistoryMarket < minHistoryMarket)
             {
                 string message = "Insufficient history provided for Beta.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistoryMarket, minHistoryMarket);
 
@@ -76,11 +82,10 @@ namespace Skender.Stock.Indicators
             int qtyHistoryEval = historyEval.Count();
             if (qtyHistoryEval < qtyHistoryMarket)
             {
-                throw new BadHistoryException(nameof(historyEval),
+                throw new BadHistoryException(
+                    nameof(historyEval),
                     "Eval history should have at least as many records as Market history for Beta.");
             }
-
         }
     }
-
 }

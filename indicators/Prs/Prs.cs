@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // PRICE RELATIVE STRENGTH
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<PrsResult> GetPrs<TQuote>(
             IEnumerable<TQuote> historyBase,
             IEnumerable<TQuote> historyEval,
@@ -14,18 +16,18 @@ namespace Skender.Stock.Indicators
             int? smaPeriod = null)
             where TQuote : IQuote
         {
-            // clean quotes
+
+            // sort history
             List<TQuote> historyBaseList = historyBase.Sort();
             List<TQuote> historyEvalList = historyEval.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidatePriceRelative(historyBase, historyEval, lookbackPeriod, smaPeriod);
 
             // initialize
             List<PrsResult> results = new List<PrsResult>(historyEvalList.Count);
 
-
-            // roll through history for interim data
+            // roll through history
             for (int i = 0; i < historyEvalList.Count; i++)
             {
                 TQuote bi = historyBaseList[i];
@@ -68,9 +70,8 @@ namespace Skender.Stock.Indicators
                         PrsResult d = results[p];
                         sumRs += d.Prs;
                     }
-                    r.Sma = sumRs / smaPeriod;
+                    r.PrsSma = sumRs / smaPeriod;
                 }
-
             }
 
             return results;
@@ -78,24 +79,27 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidatePriceRelative<TQuote>(
-            IEnumerable<TQuote> historyBase, IEnumerable<TQuote> historyEval, int? lookbackPeriod, int? smaPeriod) where TQuote : IQuote
+            IEnumerable<TQuote> historyBase,
+            IEnumerable<TQuote> historyEval,
+            int? lookbackPeriod,
+            int? smaPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
-            if (lookbackPeriod != null && lookbackPeriod <= 0)
+            // check parameter arguments
+            if (lookbackPeriod is not null and <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
                     "Lookback period must be greater than 0 for Price Relative Strength.");
             }
 
-            if (smaPeriod != null && smaPeriod <= 0)
+            if (smaPeriod is not null and <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(smaPeriod), smaPeriod,
                     "SMA period must be greater than 0 for Price Relative Strength.");
             }
 
             // check history
-
             int qtyHistoryEval = historyEval.Count();
             int qtyHistoryBase = historyBase.Count();
 
@@ -103,7 +107,8 @@ namespace Skender.Stock.Indicators
             if (minHistory != null && qtyHistoryEval < minHistory)
             {
                 string message = "Insufficient history provided for Price Relative Strength.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistoryEval, minHistory);
 
@@ -112,12 +117,10 @@ namespace Skender.Stock.Indicators
 
             if (qtyHistoryBase != qtyHistoryEval)
             {
-                throw new BadHistoryException(nameof(historyBase),
-                    "Base history should have at least as many records as Eval history for Price Relative.");
+                throw new BadHistoryException(
+                    nameof(historyBase),
+                    "Base history should have at least as many records as Eval history for PRS.");
             }
-
-            // NOTE: history of less than 1 is caught in the Cleaner
         }
     }
-
 }

@@ -1,19 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class ChandeleirTests : TestBase
+    public class Chandeleir : TestBase
     {
 
-        [TestMethod()]
-        public void GetChandlier()
+        [TestMethod]
+        public void Standard()
         {
             int lookbackPeriod = 22;
+
             List<ChandelierResult> longResult =
                 Indicator.GetChandelier(history, lookbackPeriod, 3.0m)
                 .ToList();
@@ -23,7 +24,7 @@ namespace Internal.Tests
             // proper quantities
             // should always be the same number of results as there is history
             Assert.AreEqual(502, longResult.Count);
-            Assert.AreEqual(502 - lookbackPeriod + 1, longResult.Where(x => x.ChandelierExit != null).Count());
+            Assert.AreEqual(481, longResult.Where(x => x.ChandelierExit != null).Count());
 
             // sample values (long)
             ChandelierResult a = longResult[501];
@@ -41,37 +42,27 @@ namespace Internal.Tests
             Assert.AreEqual(246.4240m, Math.Round((decimal)c.ChandelierExit, 4));
         }
 
-        [TestMethod()]
-        public void GetChandlierBadData()
+        [TestMethod]
+        public void BadData()
         {
             IEnumerable<ChandelierResult> r = Indicator.GetChandelier(historyBad, 15, 2m);
             Assert.AreEqual(502, r.Count());
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad lookback period.")]
-        public void BadLookbackPeriod()
+        [TestMethod]
+        public void Exceptions()
         {
-            Indicator.GetChandelier(history, 0);
-        }
+            // bad lookback period
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetChandelier(history, 0));
 
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad multiplier.")]
-        public void BadMultiplier()
-        {
-            Indicator.GetChandelier(history, 25, 0);
-        }
+            // bad multiplier
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetChandelier(history, 25, 0));
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history.")]
-        public void InsufficientHistory()
-        {
-            IEnumerable<Quote> h = History.GetHistory(30);
-            Indicator.GetChandelier(h, 30);
+            // insufficient history
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetChandelier(HistoryTestData.Get(30), 30));
         }
-
     }
 }

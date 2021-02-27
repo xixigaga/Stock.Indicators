@@ -1,6 +1,6 @@
-﻿# Correlation Coefficient
+# Correlation Coefficient
 
-[Correlation Coefficient](https://en.wikipedia.org/wiki/Correlation_coefficient) between two quote histories, based on Close price.  R-Squared (R&sup2;), Variance, and covariance are also output.
+[Correlation Coefficient](https://en.wikipedia.org/wiki/Correlation_coefficient) between two quote histories, based on Close price.  R-Squared (R&sup2;), Variance, and Covariance are also output.
 [[Discuss] :speech_balloon:](https://github.com/DaveSkender/Stock.Indicators/discussions/259 "Community discussion about this indicator")
 
 ![image](chart.png)
@@ -14,8 +14,8 @@ IEnumerable<CorrResult> results = Indicator.GetCorr(historyA, historyB, lookback
 
 | name | type | notes
 | -- |-- |--
-| `historyA` | IEnumerable\<[TQuote](../../docs/GUIDE.md#quote)\> | Historical quotes (A).
-| `historyB` | IEnumerable\<[TQuote](../../docs/GUIDE.md#quote)\> | Historical quotes (B) must have at least the same matching date elements of `historyA`.
+| `historyA` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical quotes (A).
+| `historyB` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical quotes (B) must have at least the same matching date elements of `historyA`.
 | `lookbackPeriod` | int | Number of periods (`N`) in the lookback period.  Must be greater than 0 to calculate; however we suggest a larger period for statistically appropriate sample size.
 
 ### Minimum history requirements

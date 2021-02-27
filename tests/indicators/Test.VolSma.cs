@@ -1,20 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class VolSmaTests : TestBase
+    public class VolSma : TestBase
     {
 
-        [TestMethod()]
-        public void GetVolSma()
+        [TestMethod]
+        public void Standard()
         {
             int lookbackPeriod = 20;
-            List<VolSmaResult> results = Indicator.GetVolSma(history, lookbackPeriod).ToList();
+
+            List<VolSmaResult> results = Indicator.GetVolSma(history, lookbackPeriod)
+                .ToList();
 
             // assertions
 
@@ -36,29 +38,23 @@ namespace Internal.Tests
             Assert.AreEqual(163695200m, r3.VolSma);
         }
 
-        [TestMethod()]
-        public void GetVolSmaBadData()
+        [TestMethod]
+        public void BadData()
         {
             IEnumerable<VolSmaResult> r = Indicator.GetVolSma(historyBad, 15);
             Assert.AreEqual(502, r.Count());
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad lookback.")]
-        public void BadLookbackPeriod()
+        [TestMethod]
+        public void Exceptions()
         {
-            Indicator.GetVolSma(history, 0);
-        }
+            // bad lookback period
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetVolSma(history, 0));
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history.")]
-        public void InsufficientHistory()
-        {
-            IEnumerable<Quote> h = History.GetHistory(9);
-            Indicator.GetVolSma(h, 10);
+            // insufficient history
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetVolSma(HistoryTestData.Get(9), 10));
         }
     }
 }

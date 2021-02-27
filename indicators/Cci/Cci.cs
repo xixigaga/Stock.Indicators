@@ -7,21 +7,22 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // COMMODITY CHANNEL INDEX
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<CciResult> GetCci<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 20)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateCci(history, lookbackPeriod);
 
             // initialize
             List<CciResult> results = new List<CciResult>(historyList.Count);
-
 
             // roll through history
             for (int i = 0; i < historyList.Count; i++)
@@ -65,10 +66,13 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateCci<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod) where TQuote : IQuote
+        private static void ValidateCci<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -81,7 +85,8 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Commodity Channel Index.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 

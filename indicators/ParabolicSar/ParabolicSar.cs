@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // PARABOLIC SAR
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<ParabolicSarResult> GetParabolicSar<TQuote>(
             IEnumerable<TQuote> history,
             decimal accelerationStep = (decimal)0.02,
@@ -14,10 +16,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateParabolicSar(history, accelerationStep, maxAccelerationFactor);
 
             // initialize
@@ -83,7 +85,8 @@ namespace Skender.Stock.Indicators
                         if (h.High > extremePoint)
                         {
                             extremePoint = h.High;
-                            accelerationFactor = Math.Min(accelerationFactor += accelerationStep, maxAccelerationFactor);
+                            accelerationFactor =
+                                Math.Min(accelerationFactor += accelerationStep, maxAccelerationFactor);
                         }
                     }
                 }
@@ -125,7 +128,8 @@ namespace Skender.Stock.Indicators
                         if (h.Low < extremePoint)
                         {
                             extremePoint = h.Low;
-                            accelerationFactor = Math.Min(accelerationFactor += accelerationStep, maxAccelerationFactor);
+                            accelerationFactor =
+                                Math.Min(accelerationFactor += accelerationStep, maxAccelerationFactor);
                         }
                     }
                 }
@@ -157,10 +161,14 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateParabolicSar<TQuote>(IEnumerable<TQuote> history, decimal accelerationStep, decimal maxAccelerationFactor) where TQuote : IQuote
+        private static void ValidateParabolicSar<TQuote>(
+            IEnumerable<TQuote> history,
+            decimal accelerationStep,
+            decimal maxAccelerationFactor)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (accelerationStep <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(accelerationStep), accelerationStep,
@@ -175,7 +183,8 @@ namespace Skender.Stock.Indicators
 
             if (accelerationStep > maxAccelerationFactor)
             {
-                string message = string.Format(englishCulture,
+                string message = string.Format(
+                    EnglishCulture,
                     "Acceleration Step must be smaller than provided Max Accleration Factor ({0}) for Parabolic SAR.",
                     maxAccelerationFactor);
 
@@ -188,14 +197,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Parabolic SAR.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

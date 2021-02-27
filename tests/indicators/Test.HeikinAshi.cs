@@ -1,20 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class HeikinAshiTests : TestBase
+    public class HeikinAshi : TestBase
     {
 
-        [TestMethod()]
-        public void GetHeikinAshi()
+        [TestMethod]
+        public void Standard()
         {
 
-            List<HeikinAshiResult> results = Indicator.GetHeikinAshi(history).ToList();
+            List<HeikinAshiResult> results = Indicator.GetHeikinAshi(history)
+                .ToList();
 
             // assertions
 
@@ -29,23 +30,19 @@ namespace Internal.Tests
             Assert.AreEqual(244.6525m, Math.Round(r.Close, 4));
         }
 
-        [TestMethod()]
-        public void GetHeikinAshiBadData()
+        [TestMethod]
+        public void BadData()
         {
             IEnumerable<HeikinAshiResult> r = Indicator.GetHeikinAshi(historyBad);
             Assert.AreEqual(502, r.Count());
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history.")]
-        public void InsufficientHistory()
+        [TestMethod]
+        public void Exceptions()
         {
-            IEnumerable<Quote> h = History.GetHistory(1);
-            Indicator.GetHeikinAshi(h);
+            // insufficient history
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetHeikinAshi(HistoryTestData.Get(1)));
         }
-
     }
 }

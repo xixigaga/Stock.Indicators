@@ -7,16 +7,18 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // ULCER INDEX (UI)
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<UlcerIndexResult> GetUlcerIndex<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 14)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateUlcer(history, lookbackPeriod);
 
             // initialize
@@ -67,10 +69,14 @@ namespace Skender.Stock.Indicators
             return results;
         }
 
-        private static void ValidateUlcer<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod) where TQuote : IQuote
+
+        private static void ValidateUlcer<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -83,14 +89,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Ulcer Index.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

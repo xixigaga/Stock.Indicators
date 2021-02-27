@@ -1,16 +1,16 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Collections.Generic;
+using BenchmarkDotNet.Attributes;
 using Internal.Tests;
 using Skender.Stock.Indicators;
-using System.Collections.Generic;
 
 namespace Tests.Performance
 {
-
     [MarkdownExporterAttribute.GitHub]
     public class MarkIndicators
     {
-        private readonly IEnumerable<Quote> h = History.GetHistory();
-        private readonly IEnumerable<Quote> ho = History.GetHistoryOther();
+        private readonly IEnumerable<Quote> h = HistoryTestData.Get();
+        private readonly IEnumerable<Quote> ho = HistoryTestData.GetCompare();
+        private readonly IEnumerable<Quote> hday = HistoryTestData.GetIntraday(391);
 
         [Benchmark]
         public object GetAdl()
@@ -49,6 +49,12 @@ namespace Tests.Performance
         }
 
         [Benchmark]
+        public object GetAwesome()
+        {
+            return Indicator.GetAwesome(h);
+        }
+
+        [Benchmark]
         public object GetBeta()
         {
             return Indicator.GetBeta(h, ho, 20);
@@ -58,6 +64,12 @@ namespace Tests.Performance
         public object GetBollingerBands()
         {
             return Indicator.GetBollingerBands(h);
+        }
+
+        [Benchmark]
+        public object GetBop()
+        {
+            return Indicator.GetBop(h);
         }
 
         [Benchmark]
@@ -76,6 +88,12 @@ namespace Tests.Performance
         public object GetChandelier()
         {
             return Indicator.GetChandelier(h);
+        }
+
+        [Benchmark]
+        public object GetChop()
+        {
+            return Indicator.GetChop(h);
         }
 
         [Benchmark]
@@ -115,6 +133,18 @@ namespace Tests.Performance
         }
 
         [Benchmark]
+        public object GetEpma()
+        {
+            return Indicator.GetEpma(h, 14);
+        }
+
+        [Benchmark]
+        public object GetFcb()
+        {
+            return Indicator.GetFcb(h, 14);
+        }
+
+        [Benchmark]
         public object GetFractal()
         {
             return Indicator.GetFractal(h);
@@ -130,6 +160,12 @@ namespace Tests.Performance
         public object GetHma()
         {
             return Indicator.GetHma(h, 14);
+        }
+
+        [Benchmark]
+        public object GetHtTrendline()
+        {
+            return Indicator.GetHtTrendline(h);
         }
 
         [Benchmark]
@@ -154,6 +190,12 @@ namespace Tests.Performance
         public object GetMacd()
         {
             return Indicator.GetMacd(h);
+        }
+
+        [Benchmark]
+        public object GetMaEnvelopes()
+        {
+            return Indicator.GetMaEnvelopes(h, 20, 2.5, MaType.SMA);
         }
 
         [Benchmark]
@@ -187,6 +229,12 @@ namespace Tests.Performance
         }
 
         [Benchmark]
+        public object GetPivotPoints()
+        {
+            return Indicator.GetPivotPoints(h, PeriodSize.Month, PivotPointType.Standard);
+        }
+
+        [Benchmark]
         public object GetPmo()
         {
             return Indicator.GetPmo(h);
@@ -205,9 +253,9 @@ namespace Tests.Performance
         }
 
         [Benchmark]
-        public object GetPrsWithLookBackAndSma()
+        public object GetPvo()
         {
-            return Indicator.GetPrs(h, ho, 30, 5);
+            return Indicator.GetPvo(h);
         }
 
         [Benchmark]
@@ -243,7 +291,13 @@ namespace Tests.Performance
         [Benchmark]
         public object GetSmaExtended()
         {
-            return Indicator.GetSma(h, 10, true);
+            return Indicator.GetSmaExtended(h, 10);
+        }
+
+        [Benchmark]
+        public object GetStarcBands()
+        {
+            return Indicator.GetStarcBands(h);
         }
 
         [Benchmark]
@@ -256,6 +310,12 @@ namespace Tests.Performance
         public object GetStdDevWithSma()
         {
             return Indicator.GetStdDev(h, 20, 14);
+        }
+
+        [Benchmark]
+        public object GetStdDevChannels()
+        {
+            return Indicator.GetStdDevChannels(h);
         }
 
         [Benchmark]
@@ -295,6 +355,18 @@ namespace Tests.Performance
         }
 
         [Benchmark]
+        public object GetTsi()
+        {
+            return Indicator.GetTsi(h);
+        }
+
+        [Benchmark]
+        public object GetT3()
+        {
+            return Indicator.GetT3(h);
+        }
+
+        [Benchmark]
         public object GetUlcerIndex()
         {
             return Indicator.GetUlcerIndex(h);
@@ -310,6 +382,18 @@ namespace Tests.Performance
         public object GetVolSma()
         {
             return Indicator.GetVolSma(h, 14);
+        }
+
+        [Benchmark]
+        public object GetVortex()
+        {
+            return Indicator.GetVortex(h, 14);
+        }
+
+        [Benchmark]
+        public object GetVwap()
+        {
+            return Indicator.GetVwap(hday);
         }
 
         [Benchmark]

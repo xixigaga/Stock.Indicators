@@ -1,6 +1,6 @@
-﻿# Price Relative Strength (PRS)
+# Price Relative Strength (PRS)
 
-[Price Relative Strength (PRS)](https://en.wikipedia.org/wiki/Relative_strength), also called Comparative Relative Strength, shows the ratio of two quote histories, based on Close price.  It is often used to compare against a market index or sector ETF.  When using the optional `lookbackPeriod`, this also return relative percent change of the specified period.  This is not the same as the more prevalent [Relative Strength Index (RSI)](../Rsi/README.md).
+[Price Relative Strength (PRS)](https://en.wikipedia.org/wiki/Relative_strength), also called Comparative Relative Strength, shows the ratio of two quote histories, based on Close price.  It is often used to compare against a market index or sector ETF.  When using the optional `lookbackPeriod`, this also returns relative percent change over the specified periods.  This is not the same as the more prevalent [Relative Strength Index (RSI)](../Rsi/README.md).
 [[Discuss] :speech_balloon:](https://github.com/DaveSkender/Stock.Indicators/discussions/243 "Community discussion about this indicator")
 
 ![image](chart.png)
@@ -17,8 +17,8 @@ IEnumerable<PrsResult> results = Indicator.GetPrs(historyBase, historyEval, smaP
 
 | name | type | notes
 | -- |-- |--
-| `historyBase` | IEnumerable\<[TQuote](../../docs/GUIDE.md#quote)\> | This is usually market index data, but could be any baseline data that you might use for comparison.
-| `historyEval` | IEnumerable\<[TQuote](../../docs/GUIDE.md#quote)\> | Historical quotes for evaluation.  You must supply the same number of periods as `historyBase`.
+| `historyBase` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | This is usually market index data, but could be any baseline data that you might use for comparison.
+| `historyEval` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical quotes for evaluation.  You must supply the same number of periods as `historyBase`.
 | `lookbackPeriod` | int | Optional.  Number of periods (`N`) to lookback to compute % difference.  Must be greater than 0 if specified or `null`.
 | `smaPeriod` | int | Optional.  Number of periods (`S`) in the SMA lookback period for `Prs`.  Must be greater than 0.
 
@@ -40,7 +40,7 @@ The `N` periods will have `null` values for `PrsPercent` and the first `S-1` per
 | -- |-- |--
 | `Date` | DateTime | Date
 | `Prs` | decimal | Price Relative Strength compares `Eval` to `Base` histories
-| `Sma` | decimal | Moving Average (SMA) of `Prs` over `S` periods
+| `PrsSma` | decimal | Moving Average (SMA) of PRS over `S` periods
 | `PrsPercent` | decimal | Percent change difference between `Eval` and `Base` over `N` periods
 
 ## Example

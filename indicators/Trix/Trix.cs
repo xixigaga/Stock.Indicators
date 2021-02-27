@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // TRIPLE EMA OSCILLATOR (TRIX)
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<TrixResult> GetTrix<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod,
@@ -15,9 +17,9 @@ namespace Skender.Stock.Indicators
         {
 
             // convert history to basic format
-            List<BasicData> bdList = Cleaners.ConvertHistoryToBasic(history, "C");
+            List<BasicData> bdList = history.ConvertToBasic("C");
 
-            // validate parameters
+            // check parameter arguments
             ValidateTrix(bdList, lookbackPeriod);
 
             // initialize
@@ -60,7 +62,7 @@ namespace Skender.Stock.Indicators
 
                     result.Ema3 = e3.Ema;
 
-                    if (lastEma != null && lastEma != 0)
+                    if (lastEma is not null and not 0)
                     {
                         result.Trix = 100 * (e3.Ema - lastEma) / lastEma;
                     }
@@ -92,10 +94,12 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateTrix(IEnumerable<BasicData> history, int lookbackPeriod)
+        private static void ValidateTrix(
+            IEnumerable<BasicData> history,
+            int lookbackPeriod)
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -108,17 +112,16 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for TRIX.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.  "
                     + "Since this uses a smoothing technique, for a lookback period of {2}, "
                     + "we recommend you use at least {3} data points prior to the intended "
-                    + "usage date for maximum precision.",
+                    + "usage date for better precision.",
                     qtyHistory, minHistory, lookbackPeriod, 3 * lookbackPeriod + 250);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
-
     }
 }

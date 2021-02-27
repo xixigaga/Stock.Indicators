@@ -7,16 +7,18 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // HULL MOVING AVERAGE
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<HmaResult> GetHma<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateHma(history, lookbackPeriod);
 
             // initialize
@@ -25,8 +27,7 @@ namespace Skender.Stock.Indicators
             List<WmaResult> wmaN1 = GetWma(history, lookbackPeriod).ToList();
             List<WmaResult> wmaN2 = GetWma(history, lookbackPeriod / 2).ToList();
 
-            // create interim synthetic history
-            // roll through history
+            // roll through history, to get interim synthetic history
             for (int i = 0; i < historyList.Count; i++)
             {
                 TQuote h = historyList[i];
@@ -46,7 +47,7 @@ namespace Skender.Stock.Indicators
                 }
             }
 
-            // initialize results, add back truncated null results
+            // add back truncated null results
             int sqN = (int)Math.Sqrt(lookbackPeriod);
             int shiftQty = lookbackPeriod - 1;
 
@@ -75,10 +76,13 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateHma<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod) where TQuote : IQuote
+        private static void ValidateHma<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -91,14 +95,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for HMA.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

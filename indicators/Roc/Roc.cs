@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // RATE OF CHANGE (ROC)
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<RocResult> GetRoc<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod,
@@ -14,10 +16,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateRoc(history, lookbackPeriod, smaPeriod);
 
             // initialize
@@ -53,7 +55,7 @@ namespace Skender.Stock.Indicators
                         sumSma += results[p].Roc;
                     }
 
-                    result.Sma = sumSma / smaPeriod;
+                    result.RocSma = sumSma / smaPeriod;
                 }
             }
 
@@ -61,17 +63,21 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateRoc<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod, int? smaPeriod) where TQuote : IQuote
+        private static void ValidateRoc<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod,
+            int? smaPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
                     "Lookback period must be greater than 0 for ROC.");
             }
 
-            if (smaPeriod != null && smaPeriod <= 0)
+            if (smaPeriod is not null and <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(smaPeriod), smaPeriod,
                     "SMA period must be greater than 0 for ROC.");
@@ -83,14 +89,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for ROC.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

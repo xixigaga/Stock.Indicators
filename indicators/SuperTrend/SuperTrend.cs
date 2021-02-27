@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // SUPERTREND
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<SuperTrendResult> GetSuperTrend<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 10,
@@ -14,10 +16,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateSuperTrend(history, lookbackPeriod, multiplier);
 
             // initialize
@@ -93,9 +95,13 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidateSuperTrend<TQuote>(
-            IEnumerable<TQuote> history, int lookbackPeriod, decimal multiplier)
+            IEnumerable<TQuote> history,
+            int lookbackPeriod,
+            decimal multiplier)
+            where TQuote : IQuote
         {
-            // check parameters
+
+            // check parameter arguments
             if (lookbackPeriod <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -108,19 +114,21 @@ namespace Skender.Stock.Indicators
                     "Multiplier must be greater than 0 for SuperTrend.");
             }
 
-            // checked history
+            // check history
             int qtyHistory = history.Count();
-            int minHistory = lookbackPeriod + 1;
+            int minHistory = lookbackPeriod + 100;
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for SuperTrend.  " +
-                    string.Format(englishCulture,
-                    "You provided {0} periods of history when at least {1} is required.",
-                    qtyHistory, minHistory);
+                    string.Format(
+                        EnglishCulture,
+                    "You provided {0} periods of history when at least {1} is required.  "
+                    + "Since this uses a smoothing technique, "
+                    + "we recommend you use at least N+250 data points prior to the intended "
+                    + "usage date for better precision.", qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
         }
     }
-
 }

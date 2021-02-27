@@ -7,13 +7,15 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // SIMPLE MOVING AVERAGE of VOLUME
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<VolSmaResult> GetVolSma<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod)
             where TQuote : IQuote
         {
 
-            // clean quotes and initialize results
+            // sort history and initialize results
             List<VolSmaResult> results = history.Sort()
                 .Select(x => new VolSmaResult
                 {
@@ -22,7 +24,7 @@ namespace Skender.Stock.Indicators
                 })
                 .ToList();
 
-            // check parameters
+            // check parameter arguments
             ValidateVolSma(history, lookbackPeriod);
 
             // roll through history
@@ -45,10 +47,13 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateVolSma<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod) where TQuote : IQuote
+        private static void ValidateVolSma<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -61,14 +66,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for VolSma.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

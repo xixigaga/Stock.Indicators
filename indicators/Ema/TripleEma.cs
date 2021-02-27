@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // TRIPLE EXPONENTIAL MOVING AVERAGE
+        /// <include file='./info.xml' path='indicators/type[@name="TEMA"]/*' />
+        /// 
         public static IEnumerable<EmaResult> GetTripleEma<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod)
@@ -14,9 +16,9 @@ namespace Skender.Stock.Indicators
         {
 
             // convert history to basic format
-            List<BasicData> bdList = Cleaners.ConvertHistoryToBasic(history, "C");
+            List<BasicData> bdList = history.ConvertToBasic("C");
 
-            // validate parameters
+            // check parameter arguments
             ValidateTema(bdList, lookbackPeriod);
 
             // initialize
@@ -63,10 +65,12 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateTema(IEnumerable<BasicData> history, int lookbackPeriod)
+        private static void ValidateTema(
+            IEnumerable<BasicData> history,
+            int lookbackPeriod)
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -79,17 +83,16 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for TEMA.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.  "
                     + "Since this uses a smoothing technique, for a lookback period of {2}, "
                     + "we recommend you use at least {3} data points prior to the intended "
-                    + "usage date for maximum precision.",
+                    + "usage date for better precision.",
                     qtyHistory, minHistory, lookbackPeriod, 3 * lookbackPeriod + 250);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
-
     }
 }

@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // BOLLINGER BANDS
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<BollingerBandsResult> GetBollingerBands<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 20,
@@ -14,10 +16,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate parameters
+            // check parameter arguments
             ValidateBollingerBands(history, lookbackPeriod, standardDeviations);
 
             // initialize
@@ -70,10 +72,13 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidateBollingerBands<TQuote>(
-            IEnumerable<TQuote> history, int lookbackPeriod, decimal standardDeviations) where TQuote : IQuote
+            IEnumerable<TQuote> history,
+            int lookbackPeriod,
+            decimal standardDeviations)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -92,14 +97,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Bollinger Bands.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
         }
-
     }
-
 }

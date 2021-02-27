@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // CHANDELIER EXIT
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<ChandelierResult> GetChandelier<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 22,
@@ -15,10 +17,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // validate inputs
+            // check parameter arguments
             ValidateChandelier(history, lookbackPeriod, multiplier);
 
             // initialize
@@ -87,10 +89,13 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidateChandelier<TQuote>(
-            IEnumerable<TQuote> history, int lookbackPeriod, decimal multiplier) where TQuote : IQuote
+            IEnumerable<TQuote> history,
+            int lookbackPeriod,
+            decimal multiplier)
+            where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (lookbackPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -109,7 +114,8 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for Chandelier Exit.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
@@ -117,5 +123,4 @@ namespace Skender.Stock.Indicators
             }
         }
     }
-
 }

@@ -1,19 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class ZigZagTests : TestBase
+    public class ZigZag : TestBase
     {
 
-        [TestMethod()]
-        public void GetZigZagClose()
+        [TestMethod]
+        public void StandardClose()
         {
             decimal percentChange = 3;
+
             List<ZigZagResult> results =
                 Indicator.GetZigZag(history, ZigZagType.Close, percentChange)
                 .ToList();
@@ -66,10 +67,11 @@ namespace Internal.Tests
             Assert.AreEqual(null, r5.PointType);
         }
 
-        [TestMethod()]
-        public void GetZigZagHighLow()
+        [TestMethod]
+        public void StandardHighLow()
         {
             decimal percentChange = 3;
+
             List<ZigZagResult> results =
                 Indicator.GetZigZag(history, ZigZagType.HighLow, percentChange)
                 .ToList();
@@ -122,29 +124,23 @@ namespace Internal.Tests
             Assert.AreEqual(null, r5.PointType);
         }
 
-        [TestMethod()]
-        public void GetZigZagBadData()
+        [TestMethod]
+        public void BadData()
         {
             IEnumerable<ZigZagResult> r = Indicator.GetZigZag(historyBad);
             Assert.AreEqual(502, r.Count());
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad lookback.")]
-        public void BadLookbackPeriod()
+        [TestMethod]
+        public void Exceptions()
         {
-            Indicator.GetZigZag(history, ZigZagType.Close, 0);
-        }
+            // bad lookback period
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetZigZag(history, ZigZagType.Close, 0));
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history.")]
-        public void InsufficientHistory()
-        {
-            IEnumerable<Quote> h = History.GetHistory(1);
-            Indicator.GetZigZag(h);
+            // insufficient history
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetZigZag(HistoryTestData.Get(1)));
         }
     }
 }

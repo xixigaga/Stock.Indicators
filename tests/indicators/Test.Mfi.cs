@@ -1,55 +1,52 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class MfiTests : TestBase
+    public class Mfi : TestBase
     {
 
-        [TestMethod()]
-        public void GetMfi()
+        [TestMethod]
+        public void Standard()
         {
             int lookbackPeriod = 14;
-            List<MfiResult> results = Indicator.GetMfi(history, lookbackPeriod).ToList();
+
+            List<MfiResult> results = Indicator.GetMfi(history, lookbackPeriod)
+                .ToList();
 
             // assertions
 
             // proper quantities
             // should always be the same number of results as there is history
             Assert.AreEqual(502, results.Count);
-            Assert.AreEqual(502 - lookbackPeriod, results.Where(x => x.Mfi != null).Count());
+            Assert.AreEqual(488, results.Where(x => x.Mfi != null).Count());
 
             // sample values
-            MfiResult r1 = results[501];
-            Assert.AreEqual(39.9494m, Math.Round((decimal)r1.Mfi, 4));
+            MfiResult r1 = results[439];
+            Assert.AreEqual(69.0622m, Math.Round((decimal)r1.Mfi, 4));
 
-            MfiResult r2 = results[439];
-            Assert.AreEqual(69.0622m, Math.Round((decimal)r2.Mfi, 4));
+            MfiResult r2 = results[501];
+            Assert.AreEqual(39.9494m, Math.Round((decimal)r2.Mfi, 4));
         }
 
-        [TestMethod()]
-        public void GetMfiBadData()
-        {
-            IEnumerable<MfiResult> r = Indicator.GetMfi(historyBad, 15);
-            Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod()]
-        public void GetMfiSmall()
+        [TestMethod]
+        public void SmallLookback()
         {
             int lookbackPeriod = 4;
-            List<MfiResult> results = Indicator.GetMfi(history, lookbackPeriod).ToList();
+
+            List<MfiResult> results = Indicator.GetMfi(history, lookbackPeriod)
+                .ToList();
 
             // assertions
 
             // proper quantities
             // should always be the same number of results as there is history
             Assert.AreEqual(502, results.Count);
-            Assert.AreEqual(502 - lookbackPeriod, results.Where(x => x.Mfi != null).Count());
+            Assert.AreEqual(498, results.Where(x => x.Mfi != null).Count());
 
             // sample values
             MfiResult r1 = results[31];
@@ -59,23 +56,23 @@ namespace Internal.Tests
             Assert.AreEqual(0m, Math.Round((decimal)r2.Mfi, 4));
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad lookback.")]
-        public void BadLookbackPeriod()
+        [TestMethod]
+        public void BadData()
         {
-            Indicator.GetMfi(history, 1);
+            IEnumerable<MfiResult> r = Indicator.GetMfi(historyBad, 15);
+            Assert.AreEqual(502, r.Count());
         }
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history for N+1.")]
-        public void InsufficientHistoryA()
+        [TestMethod]
+        public void Exceptions()
         {
-            IEnumerable<Quote> h = History.GetHistory(14);
-            Indicator.GetMfi(h, 14);
-        }
+            // bad lookback period
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetMfi(history, 1));
 
+            // insufficient history
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetMfi(HistoryTestData.Get(14), 14));
+        }
     }
 }

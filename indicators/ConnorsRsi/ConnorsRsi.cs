@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // CONNORS RSI
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<ConnorsRsiResult> GetConnorsRsi<TQuote>(
             IEnumerable<TQuote> history,
             int rsiPeriod = 3,
@@ -16,13 +18,13 @@ namespace Skender.Stock.Indicators
         {
 
             // convert history to basic format
-            List<BasicData> bd = Cleaners.ConvertHistoryToBasic(history, "C").ToList();
+            List<BasicData> bdList = history.ConvertToBasic("C");
 
-            // check parameters
-            ValidateConnorsRsi(bd, rsiPeriod, streakPeriod, rankPeriod);
+            // check parameter arguments
+            ValidateConnorsRsi(bdList, rsiPeriod, streakPeriod, rankPeriod);
 
             // initialize
-            List<ConnorsRsiResult> results = CalcConnorsRsiBaseline(bd, rsiPeriod, rankPeriod);
+            List<ConnorsRsiResult> results = CalcConnorsRsiBaseline(bdList, rsiPeriod, rankPeriod);
             int startPeriod = Math.Max(rsiPeriod, Math.Max(streakPeriod, rankPeriod)) + 2;
 
             // RSI of streak
@@ -54,14 +56,18 @@ namespace Skender.Stock.Indicators
         private static List<ConnorsRsiResult> CalcConnorsRsiBaseline(
             List<BasicData> bdList, int rsiPeriod, int rankPeriod)
         {
+            // initialize
             List<RsiResult> rsiResults = CalcRsi(bdList, rsiPeriod).ToList();
-            List<ConnorsRsiResult> results = new List<ConnorsRsiResult>(bdList.Count);
+
+            int size = bdList.Count;
+            List<ConnorsRsiResult> results = new List<ConnorsRsiResult>(size);
+            decimal?[] gain = new decimal?[size];
 
             decimal? lastClose = null;
             decimal streak = 0;
 
             // compose interim results
-            for (int i = 0; i < bdList.Count; i++)
+            for (int i = 0; i < size; i++)
             {
                 BasicData h = bdList[i];
                 int index = i + 1;
@@ -111,7 +117,7 @@ namespace Skender.Stock.Indicators
                 result.Streak = streak;
 
                 // percentile rank
-                result.PeriodGain = (lastClose == 0) ? null
+                gain[i] = (lastClose == 0) ? null
                     : (decimal)((lastClose <= 0) ? null : (h.Value - lastClose) / lastClose);
 
                 results.Add(result);
@@ -121,8 +127,7 @@ namespace Skender.Stock.Indicators
                     int qty = 0;
                     for (int p = index - rankPeriod - 1; p < index; p++)
                     {
-                        ConnorsRsiResult r = results[p];
-                        if (r.PeriodGain < result.PeriodGain)
+                        if (gain[p] < gain[i])
                         {
                             qty++;
                         }
@@ -140,10 +145,13 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidateConnorsRsi(
-            IEnumerable<BasicData> history, int rsiPeriod, int streakPeriod, int rankPeriod)
+            IEnumerable<BasicData> history,
+            int rsiPeriod,
+            int streakPeriod,
+            int rankPeriod)
         {
 
-            // check parameters
+            // check parameter arguments
             if (rsiPeriod <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(rsiPeriod), rsiPeriod,
@@ -164,19 +172,19 @@ namespace Skender.Stock.Indicators
 
             // check history
             int qtyHistory = history.Count();
-            int minHistory = Math.Max(rsiPeriod, Math.Max(streakPeriod, rankPeriod + 2));
+            int minHistory = Math.Max(rsiPeriod + 100, Math.Max(streakPeriod, rankPeriod + 2));
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for ConnorsRsi.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.  "
                     + "Since this uses a smoothing technique, "
-                    + "we recommend you use at least 250 data points prior to the intended "
-                    + "usage date for maximum precision.", qtyHistory, minHistory);
+                    + "we recommend you use at least N+150 data points prior to the intended "
+                    + "usage date for better precision.", qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
         }
     }
-
 }

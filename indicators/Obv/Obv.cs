@@ -7,16 +7,18 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // ON-BALANCE VOLUME
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<ObvResult> GetObv<TQuote>(
             IEnumerable<TQuote> history,
             int? smaPeriod = null)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateObv(history, smaPeriod);
 
             // initialize
@@ -25,6 +27,7 @@ namespace Skender.Stock.Indicators
             decimal? prevClose = null;
             decimal obv = 0;
 
+            // roll through history
             for (int i = 0; i < historyList.Count; i++)
             {
                 TQuote h = historyList[i];
@@ -61,7 +64,7 @@ namespace Skender.Stock.Indicators
                         sumSma += results[p].Obv;
                     }
 
-                    result.Sma = sumSma / smaPeriod;
+                    result.ObvSma = sumSma / smaPeriod;
                 }
             }
 
@@ -69,14 +72,17 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateObv<TQuote>(IEnumerable<TQuote> history, int? smaPeriod) where TQuote : IQuote
+        private static void ValidateObv<TQuote>(
+            IEnumerable<TQuote> history,
+            int? smaPeriod)
+            where TQuote : IQuote
         {
 
-            // check parameters
-            if (smaPeriod != null && smaPeriod <= 0)
+            // check parameter arguments
+            if (smaPeriod is not null and <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(smaPeriod), smaPeriod,
-                    "SMA period must be greater than 0 for ADL.");
+                    "SMA period must be greater than 0 for OBV.");
             }
 
             // check history
@@ -85,14 +91,13 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for On-balance Volume.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.",
                     qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

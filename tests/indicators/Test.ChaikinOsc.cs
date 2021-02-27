@@ -1,21 +1,23 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     [TestClass]
-    public class ChaikinOscTests : TestBase
+    public class ChaikinOsc : TestBase
     {
 
-        [TestMethod()]
-        public void GetChaikinOsc()
+        [TestMethod]
+        public void Standard()
         {
             int fastPeriod = 3;
             int slowPeriod = 10;
-            List<ChaikinOscResult> results = Indicator.GetChaikinOsc(history, fastPeriod, slowPeriod).ToList();
+
+            List<ChaikinOscResult> results = Indicator.GetChaikinOsc(history, fastPeriod, slowPeriod)
+                .ToList();
 
             // assertions
 
@@ -32,45 +34,45 @@ namespace Internal.Tests
             Assert.AreEqual(-19135200.72m, Math.Round((decimal)r.Oscillator, 2));
         }
 
-        [TestMethod()]
-        public void GetChaikinOscBadData()
+        [TestMethod]
+        public void BadData()
         {
             IEnumerable<ChaikinOscResult> r = Indicator.GetChaikinOsc(historyBad, 5, 15);
             Assert.AreEqual(502, r.Count());
         }
 
-
-        /* EXCEPTIONS */
-
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad fast lookback.")]
-        public void BadFastLookback()
+        [TestMethod]
+        public void Convergence()
         {
-            Indicator.GetChaikinOsc(history, 0);
+            foreach (int qty in convergeQuantities)
+            {
+                IEnumerable<Quote> h = HistoryTestData.GetLong(110 + qty);
+                IEnumerable<ChaikinOscResult> r = Indicator.GetChaikinOsc(h);
+
+                ChaikinOscResult l = r.LastOrDefault();
+                Console.WriteLine("CHAIKIN OSC on {0:d} with {1,4} periods: {2:N8}",
+                    l.Date, h.Count(), l.Oscillator);
+            }
         }
 
-        [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Bad slow lookback.")]
-        public void BadSlowLookback()
+        [TestMethod]
+        public void Exceptions()
         {
-            Indicator.GetChaikinOsc(history, 10, 5);
-        }
+            // bad fast lookback
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetChaikinOsc(history, 0));
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history for S+100.")]
-        public void InsufficientHistory100()
-        {
-            IEnumerable<Quote> h = History.GetHistory(109);
-            Indicator.GetChaikinOsc(h, 3, 10);
-        }
+            // bad slow lookback
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                Indicator.GetChaikinOsc(history, 10, 5));
 
-        [TestMethod()]
-        [ExpectedException(typeof(BadHistoryException), "Insufficient history for 2×S.")]
-        public void InsufficientHistory250()
-        {
-            IEnumerable<Quote> h = History.GetHistory(499);
-            Indicator.GetChaikinOsc(h, 3, 250);
-        }
+            // insufficient history S+100
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetChaikinOsc(HistoryTestData.Get(109), 3, 10));
 
+            // insufficient history 2×S
+            Assert.ThrowsException<BadHistoryException>(() =>
+                Indicator.GetChaikinOsc(HistoryTestData.Get(499), 3, 250));
+        }
     }
 }

@@ -7,19 +7,21 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // AVERAGE DIRECTIONAL INDEX
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<AdxResult> GetAdx<TQuote>(
             IEnumerable<TQuote> history,
             int lookbackPeriod = 14)
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // verify parameters
+            // check parameter arguments
             ValidateAdx(history, lookbackPeriod);
 
-            // initialize results and working variables
+            // initialize
             List<AdxResult> results = new List<AdxResult>(historyList.Count);
             List<AtrResult> atrResults = GetAtr(history, lookbackPeriod).ToList(); // uses True Range value
 
@@ -56,8 +58,12 @@ namespace Skender.Stock.Indicators
                 }
 
                 decimal tr = (decimal)atrResults[i].Tr;
-                decimal pdm1 = (h.High - prevHigh) > (prevLow - h.Low) ? Math.Max(h.High - prevHigh, 0) : 0;
-                decimal mdm1 = (prevLow - h.Low) > (h.High - prevHigh) ? Math.Max(prevLow - h.Low, 0) : 0;
+
+                decimal pdm1 = (h.High - prevHigh) > (prevLow - h.Low) ?
+                    Math.Max(h.High - prevHigh, 0) : 0;
+
+                decimal mdm1 = (prevLow - h.Low) > (h.High - prevHigh) ?
+                    Math.Max(prevLow - h.Low, 0) : 0;
 
                 prevHigh = h.High;
                 prevLow = h.Low;
@@ -142,9 +148,13 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static void ValidateAdx<TQuote>(IEnumerable<TQuote> history, int lookbackPeriod) where TQuote : IQuote
+        private static void ValidateAdx<TQuote>(
+            IEnumerable<TQuote> history,
+            int lookbackPeriod)
+            where TQuote : IQuote
         {
-            // check parameters
+
+            // check parameter arguments
             if (lookbackPeriod <= 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(lookbackPeriod), lookbackPeriod,
@@ -157,11 +167,11 @@ namespace Skender.Stock.Indicators
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for ADX.  " +
-                    string.Format(englishCulture,
+                    string.Format(EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.  "
                     + "Since this uses a smoothing technique, "
-                    + "we recommend you use at least 250 data points prior to the intended "
-                    + "usage date for maximum precision.", qtyHistory, minHistory);
+                    + "we recommend you use at least 2×N+250 data points prior to the intended "
+                    + "usage date for better precision.", qtyHistory, minHistory);
 
                 throw new BadHistoryException(nameof(history), message);
             }

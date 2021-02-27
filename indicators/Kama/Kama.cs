@@ -7,6 +7,8 @@ namespace Skender.Stock.Indicators
     public static partial class Indicator
     {
         // KAUFMAN's ADAPTIVE MOVING AVERAGE
+        /// <include file='./info.xml' path='indicator/*' />
+        /// 
         public static IEnumerable<KamaResult> GetKama<TQuote>(
             IEnumerable<TQuote> history,
             int erPeriod = 10,
@@ -15,10 +17,10 @@ namespace Skender.Stock.Indicators
             where TQuote : IQuote
         {
 
-            // clean quotes
+            // sort history
             List<TQuote> historyList = history.Sort();
 
-            // check parameters
+            // check parameter arguments
             ValidateKama(history, erPeriod, fastPeriod, slowPeriod);
 
             // initialize
@@ -81,11 +83,14 @@ namespace Skender.Stock.Indicators
 
 
         private static void ValidateKama<TQuote>(
-            IEnumerable<TQuote> history, int erPeriod, int fastPeriod, int slowPeriod)
+            IEnumerable<TQuote> history,
+            int erPeriod,
+            int fastPeriod,
+            int slowPeriod)
             where TQuote : IQuote
         {
 
-            // check parameters
+            // check parameter arguments
             if (erPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(erPeriod), erPeriod,
@@ -106,21 +111,20 @@ namespace Skender.Stock.Indicators
 
             // check history
             int qtyHistory = history.Count();
-            int minHistory = Math.Max(2 * erPeriod, erPeriod + 50);
+            int minHistory = Math.Max(6 * erPeriod, erPeriod + 100);
             if (qtyHistory < minHistory)
             {
                 string message = "Insufficient history provided for KAMA.  " +
-                    string.Format(englishCulture,
+                    string.Format(
+                        EnglishCulture,
                     "You provided {0} periods of history when at least {1} is required.  "
                     + "Since this uses a smoothing technique, for an ER period of {2}, "
                     + "we recommend you use at least {3} data points prior to the intended "
-                    + "usage date for maximum precision.",
-                    qtyHistory, minHistory, erPeriod, erPeriod + 100);
+                    + "usage date for better precision.",
+                    qtyHistory, minHistory, erPeriod, 10 * erPeriod);
 
                 throw new BadHistoryException(nameof(history), message);
             }
-
         }
     }
-
 }

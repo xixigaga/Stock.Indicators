@@ -6,16 +6,15 @@
 [![code coverage](https://img.shields.io/azure-devops/coverage/skender/stock.indicators/21/master?logo=AzureDevOps&label=Code%20Coverage)](https://dev.azure.com/skender/Stock.Indicators/_build/latest?definitionId=21&branchName=master&view=codecoverage-tab)
 [![CodeQL](https://github.com/DaveSkender/Stock.Indicators/workflows/CodeQL/badge.svg)](https://github.com/DaveSkender/Stock.Indicators/security/code-scanning)
 
-[Skender.Stock.Indicators](https://www.nuget.org/packages/Skender.Stock.Indicators) is a .NET library that produces [stock indicators](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html).  Send in historical price quotes and get back desired technical indicators (such as moving average, relative strength, stochastic oscillator, parabolic SAR, etc).  Nothing more.
+[Stock.Indicators](https://www.nuget.org/packages/Skender.Stock.Indicators) is a .NET library that produces technical indicators.  Send in historical price quotes and get back desired indicators such as moving averages, Relative Strength Index, Stochastic Oscillator, Parabolic SAR, etc.  Nothing more.
 
 It can be used in any market analysis software using standard OHLCV price quotes for equities, commodities, forex, cryptocurrencies, and others.  We had private trading algorithms, machine learning, and charting systems in mind when originally creating this community library.
 
 Explore more information:
 
 - [Indicators and overlays](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html)
-- [Getting started](#getting-started)
 - [Guide and Pro tips](https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html)
-- [Contributing guidelines](docs/CONTRIBUTING.md#content)
+- [Contributing guidelines](https://daveskender.github.io/Stock.Indicators/docs/CONTRIBUTING.html)
 - [Discussions](https://github.com/DaveSkender/Stock.Indicators/discussions)
 - [Release notes](https://github.com/DaveSkender/Stock.Indicators/releases)
 - [Demo site](https://stock-charts.azurewebsites.net) (a stock chart)
@@ -24,22 +23,6 @@ Explore more information:
 ## Samples
 
 ![image](docs/examples.png)
-
-See [full list of indicators and overlays](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html) for more information.
-
-## Getting started
-
-### Installation and setup
-
-Find and install the [Skender.Stock.Indicators](https://www.nuget.org/packages/Skender.Stock.Indicators) NuGet package into your Project.  See [more help](https://www.google.com/search?q=install+nuget+package) for installing packages.
-
-```powershell
-# dotnet CLI example
-dotnet add package Skender.Stock.Indicators
-
-# package manager example
-Install-Package Skender.Stock.Indicators
-```
 
 ### Example usage
 
@@ -52,7 +35,7 @@ using Skender.Stock.Indicators;
 IEnumerable<SmaResult> results = Indicator.GetSma(history,20);
 ```
 
-See [individual indicator pages](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html) for specific guidance.
+See the [guide](https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html) and the [full list of indicators and overlays](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html) for more information.
 
 ## Frameworks targeted
 
@@ -61,9 +44,17 @@ See [individual indicator pages](https://daveskender.github.io/Stock.Indicators/
 - .NET Standard 2.0, 2.1
 - .NET Framework 4.6.1
 
+The compiled library package is [Common Language Specification (CLS) compliant](https://docs.microsoft.com/en-us/dotnet/standard/common-type-system) and can be used in other programming languages, including Python and everything in the .NET universe.
+
 ## Contributing
 
-This NuGet package is an open-source project.  If you want to report bugs or contribute fixes, new indicators, or new features, please review our [contributing guidelines](docs/CONTRIBUTING.md#content) and [the backlog](https://github.com/DaveSkender/Stock.Indicators/projects/1).
+This NuGet package is an open-source community project.  If you want to report bugs or contribute fixes, new indicators, or new features, please review our [contributing guidelines](docs/CONTRIBUTING.md#content) and [the backlog](https://github.com/DaveSkender/Stock.Indicators/projects/1).
+
+## License
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+This repository uses the standard Apache 2.0 open-source license.  Please review the [license](https://opensource.org/licenses/Apache-2.0) before using or contributing to the software.
 
 ## Contact us
 

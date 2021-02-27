@@ -1,17 +1,17 @@
-﻿using Skender.Stock.Indicators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Skender.Stock.Indicators;
 
 namespace Internal.Tests
 {
     // LONG HISTORY
 
-    internal partial class History
+    internal partial class HistoryTestData
     {
         // note: declarations in primary History file
 
-        internal static IEnumerable<Quote> GetHistoryLong(int days = 5285)
+        internal static IEnumerable<Quote> GetLong(int days = 5285)
         {
             // includes over 5,000 periods of history
             List<Quote> h = new List<Quote> {

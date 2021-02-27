@@ -1,8 +1,8 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BenchmarkDotNet.Attributes;
 using Internal.Tests;
 using Skender.Stock.Indicators;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Tests.Performance
 {
@@ -18,7 +18,7 @@ namespace Tests.Performance
         [GlobalSetup]
         public void Setup()
         {
-            values = History.GetHistoryLong(Periods)
+            values = HistoryTestData.GetLong(Periods)
                 .Select(x => (double)x.Close)
                 .ToArray();
         }
@@ -33,28 +33,26 @@ namespace Tests.Performance
 
 
     [MarkdownExporterAttribute.GitHub]
-    public class MarkCleaners
+    public static class MarkHistoryHelpers
     {
-        private static readonly IEnumerable<Quote> h = History.GetHistory();
+        private static readonly IEnumerable<Quote> h = HistoryTestData.Get();
 
         [Benchmark]
-        public object SortHistory()
+        public static object Sort()
         {
             return h.Sort();
         }
 
         [Benchmark]
-        public object ValidateHistory()
+        public static object Validate()
         {
-            return Cleaners.ValidateHistory(h);
+            return h.Validate();
         }
 
         [Benchmark]
-        public object ConvertToBasicData()
+        public static object ConvertToBasic()
         {
-            return Cleaners.ConvertHistoryToBasic(h);
+            return h.ConvertToBasic();
         }
-
     }
-
 }
