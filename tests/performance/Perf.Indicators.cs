@@ -127,6 +127,12 @@ namespace Tests.Performance
         }
 
         [Benchmark]
+        public object GetElderRay()
+        {
+            return Indicator.GetElderRay(h);
+        }
+
+        [Benchmark]
         public object GetEma()
         {
             return Indicator.GetEma(h, 14);
@@ -142,6 +148,12 @@ namespace Tests.Performance
         public object GetFcb()
         {
             return Indicator.GetFcb(h, 14);
+        }
+
+        [Benchmark]
+        public object GetForceIndex()
+        {
+            return Indicator.GetForceIndex(h, 13);
         }
 
         [Benchmark]
@@ -292,6 +304,12 @@ namespace Tests.Performance
         public object GetSmaExtended()
         {
             return Indicator.GetSmaExtended(h, 10);
+        }
+
+        [Benchmark]
+        public object GetSmma()
+        {
+            return Indicator.GetSmma(h, 10);
         }
 
         [Benchmark]

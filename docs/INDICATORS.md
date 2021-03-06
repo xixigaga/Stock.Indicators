@@ -10,6 +10,7 @@
 - [Composite indicators](#composite-indicators)
 - [Stop and reverse](#stop-and-reverse)
 - [Price characteristics](#price-characteristics)
+- [Numerical analysis](#numerical-analysis)
 
 ## Moving averages
 
@@ -23,6 +24,7 @@
 - [Least Squares Moving Average (LSMA)](../indicators/Epma/README.md#content)
 - [MESA Adaptive Moving Averages (MAMA)](../indicators/Mama/README.md#content)
 - [Simple Moving Average (SMA)](../indicators/Sma/README.md#content)
+- [Smoothed Moving Average (SMMA)](../indicators/Smma/README.md#content)
 - [Tillson T3 Moving Average](../indicators/T3/README.md#content)
 - [Triple EMA Oscillator (TRIX)](../indicators/Trix/README.md#content)
 - [Triple Exponential Moving Average (TEMA)](../indicators/Ema/README.md#content)
@@ -64,6 +66,7 @@
 ## Price trends
 
 - [Average Directional Movement Index (ADX)](../indicators/Adx/README.md#content)
+- [Elder-ray Index](../indicators/ElderRay/README.md#content)
 - [Vortex Indicator (VI)](../indicators/Vortex/README.md#content)
 
 ## Volume-based momentum
@@ -71,6 +74,7 @@
 - [Accumulation/Distribution Line (ADL)](../indicators/Adl/README.md#content)
 - [Chaikin Money Flow (CMF)](../indicators/Cmf/README.md#content)
 - [Chaikin Oscillator](../indicators/ChaikinOsc/README.md#content)
+- [Force Index](../indicators/ForceIndex/README.md#content)
 - [Money Flow Index (MFI)](../indicators/Mfi/README.md#content)
 - [On-balance Volume (OBV)](../indicators/Obv/README.md#content)
 - [Percentage Volume Oscillator (PVO)](../indicators/Pvo/README.md#content)
@@ -92,6 +96,7 @@
 - [Average True Range (ATR)](../indicators/Atr/README.md#content)
 - [Awesome Oscillator](../indicators/Awesome/README.md#content)
 - [Balance of Power](../indicators/Bop/README.md#content)
+- [Bull and Bear Power](../indicators/ElderRay/README.md#content)
 - [Choppiness Index](../indicators/Chop/README.md#content)
 - [Momentum Oscillator](../indicators/Roc/README.md#content)
 - [Price (Comparative) Relative Strength](../indicators/Prs/README.md#content)
