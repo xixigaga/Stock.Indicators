@@ -14,7 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
             int lookbackPeriod = 14;
-            List<AdxResult> results = Indicator.GetAdx(history, lookbackPeriod).ToList();
+            List<AdxResult> results = history.GetAdx(lookbackPeriod).ToList();
 
             // assertions
 
@@ -50,20 +50,6 @@ namespace Internal.Tests
         {
             IEnumerable<AdxResult> r = Indicator.GetAdx(historyBad, 20);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(128 + qty);
-                IEnumerable<AdxResult> r = Indicator.GetAdx(h);
-
-                AdxResult l = r.LastOrDefault();
-                Console.WriteLine("ADX on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Adx);
-            }
         }
 
         [TestMethod]

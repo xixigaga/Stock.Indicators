@@ -7,19 +7,21 @@ Created by Larry Williams, the [Williams %R](https://en.wikipedia.org/wiki/Willi
 
 ```csharp
 // usage
-IEnumerable<WilliamsResult> results = Indicator.GetWilliamsR(history, lookbackPeriod);  
+IEnumerable<WilliamsResult> results =
+  history.GetWilliamsR(lookbackPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) in the lookback period.  Must be greater than 0.  Default is 14.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N` periods of `history`.
+You must have at least `N` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -39,11 +41,11 @@ The first `N-1` periods will have `null` Oscillator values since there's not eno
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate WilliamsR(14)
-IEnumerable<WilliamsResult> results = Indicator.GetWilliamsR(history,14);
+IEnumerable<WilliamsResult> results = history.GetWilliamsR(14);
 
 // use results as needed
 WilliamsResult result = results.LastOrDefault();

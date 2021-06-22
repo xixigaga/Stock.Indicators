@@ -8,20 +8,21 @@ Created by Bill Williams, the Awesome Oscillator (aka Super AO) is a measure of 
 ```csharp
 // usage
 IEnumerable<AwesomeResult> results =
-  Indicator.GetAwesome(history, fastPeriod, slowPeriod);  
+  history.GetAwesome(fastPeriod, slowPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `fastPeriod` | int | Number of periods (`F`) for the faster moving average.  Must be greater than 0.  Default is 5.
 | `slowPeriod` | int | Number of periods (`S`) for the slower moving average.  Must be greater than `fastPeriod`.  Default is 34.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `S` periods of `history`.
+You must have at least `S` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -42,11 +43,11 @@ The first period `S-1` periods will have `null` values since there's not enough 
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("MSFT");
 
 // calculate
-IEnumerable<AwesomeResult> results = Indicator.GetAwesome(history,5,34);
+IEnumerable<AwesomeResult> results = history.GetAwesome(5,34);
 
 // use results as needed
 AwesomeResult r = results.LastOrDefault();

@@ -1,4 +1,4 @@
-﻿# Guide and Pro tips
+# Guide and Pro tips
 
 - [Installation and setup](#installation-and-setup)
 - [Prerequisite data](#prerequisite-data)
@@ -29,8 +29,9 @@ Install-Package Skender.Stock.Indicators
 
 Most indicators require that you provide historical quote data and additional configuration parameters.
 
-You must get historical quotes from your own stock data provider.
-Historical price data must be provided as an `IEnumerable` of the `Quote` class ([see below](#historical-quotes)); however, it can also be supplied as a generic [custom quote type](#using-custom-quote-classes) if you prefer to use your own quote model.
+You must get historical quotes from your own market data provider.  For clarification, the `GetHistoryFromFeed()` method shown in the example below and throughout our documentation **is not part of this library**, but rather an example to represent your own acquisition of historical quotes.
+
+Historical price data can be provided as an `IEnumerable` of the `Quote` class ([see below](#historical-quotes)); however, it can also be supplied as a generic [custom TQuote type](#using-custom-quote-classes) if you prefer to use your own quote model.
 
 For additional configuration parameters, default values are provided when there is an industry standard.
 You can, of course, override these and provide your own values.
@@ -44,11 +45,11 @@ using Skender.Stock.Indicators;
 
 [..]
 
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("MSFT");
 
 // calculate 20-period SMA
-IEnumerable<SmaResult> results = Indicator.GetSma(history,20);
+IEnumerable<SmaResult> results = history.GetSma(20);
 
 // use results as needed
 SmaResult result = results.LastOrDefault();
@@ -57,6 +58,13 @@ Console.WriteLine("SMA on {0} was ${1}", result.Date, result.Sma);
 
 ```bash
 SMA on 12/31/2018 was $251.86
+```
+
+If you do not prefer using the history extension syntax, a full method syntax can also be used.
+
+```csharp
+// alternate full syntax example
+IEnumerable<SmaResult> results = Indicator.GetSma(history,20);
 ```
 
 See [individual indicator pages](INDICATORS.md) for specific usage guidance.
@@ -82,7 +90,7 @@ There are many places to get stock market data.  Check with your brokerage or ot
 
 Each indicator will need different amounts of price quote `history` to calculate.  You can find guidance on the individual indicator documentation pages for minimum requirements; however, most use cases will require that you provide more than the minimum.  As a general rule of thumb, you will be safe if you provide 750 points of historical quote data (e.g. 3 years of daily data).  A `BadHistoryException` will be thrown if you do not provide sufficient history to produce any results.
 
-:warning: IMPORTANT! Some indicators, especially those that are derived from [Exponential Moving Average](../indicators/Ema/README.md), use a smoothing technique where there is precision convergence over time.  While you can calculate these with the minimum amount of data, the precision to two decimal points often requires 250 or more preceding historical records.
+:warning: IMPORTANT! Some indicators use a smoothing technique that converges to better precision over time.  While you can calculate these with the minimum amount of quote data, the precision to two decimal points often requires 250 or more preceding historical records.
 
 For example, if you are using daily data and want one year of precise EMA(250) data, you need to provide 3 years of historical quotes (1 extra year for the lookback period and 1 extra year for convergence); thereafter, you would discard or not use the first two years of results.  Occassionally, even more is required for optimal precision.
 
@@ -115,7 +123,7 @@ public class MyCustomQuote : IQuote
 IEnumerable<MyCustomQuote> myHistory = GetHistoryFromFeed("MSFT");
 
 // example: get 20-period simple moving average
-IEnumerable<SmaResult> results = Indicator.GetSma(myHistory,20);
+IEnumerable<SmaResult> results = myHistory.GetSma(20);
 ```
 
 #### Using custom quote property names
@@ -169,11 +177,11 @@ public class MyEma : EmaResult
 
 public void MyClass(){
 
-  // fetch historical quotes from your favorite feed, in Quote format
+  // fetch historical quotes from your feed (your method)
   IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
   // compute indicator
-  INumerable<EmaResult> emaResults = Indicator.GetEma(history,14);
+  INumerable<EmaResult> emaResults = history.GetEma(14);
 
   // convert to my Ema class list [using LINQ]
   List<MyEma> myEmaResults = emaResults
@@ -208,11 +216,11 @@ public class MyEma
 
 public void MyClass(){
 
-  // fetch historical quotes from your favorite feed, in Quote format
+  // fetch historical quotes from your feed (your method)
   IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
   // compute indicator
-  INumerable<EmaResult> emaResults = Indicator.GetEma(history,14);
+  INumerable<EmaResult> emaResults = history.GetEma(14);
 
   // convert to my Ema class list [using LINQ]
   List<MyEma> myEmaResults = emaResults
@@ -237,11 +245,11 @@ public void MyClass(){
 If you want to compute an indicator of indicators, such as an SMA of an ADX or an [RSI of an OBV](https://medium.com/@robswc/this-is-what-happens-when-you-combine-the-obv-and-rsi-indicators-6616d991773d), all you need to do is to take the results of one, reformat into a synthetic quote history, and send it through to another indicator.  Example:
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate OBV
-IEnumerable<ObvResult> obvResults = Indicator.GetObv(history);
+IEnumerable<ObvResult> obvResults = history.GetObv();
 
 // convert to synthetic history [using LINQ]
 List<Quote> obvHistory = obvResults
@@ -255,7 +263,7 @@ List<Quote> obvHistory = obvResults
 
 // calculate RSI of OBV
 int lookbackPeriod = 14;
-IEnumerable<RsiResult> results = Indicator.GetRsi(obvHistory, lookbackPeriod);
+IEnumerable<RsiResult> results = obvHistory.GetRsi(lookbackPeriod);
 ```
 
 ## Helper functions
@@ -269,9 +277,38 @@ IEnumerable<RsiResult> results = Indicator.GetRsi(obvHistory, lookbackPeriod);
 IEnumerable<Quote> history = GetHistoryFromFeed("MSFT");
 
 // calculate indicator series
-IEnumerable<SmaResult> results = Indicator.GetSma(history,20);
+IEnumerable<SmaResult> results = history.GetSma(20);
 
 // find result on a specific date
 DateTime lookupDate = [..] // the date you want to find
 SmaResult result = results.Find(lookupDate);
 ```
+
+### Resize quote history
+
+`history.Aggregate(newSize)` is a tool to convert history to larger bar sizes.  For example if you have minute bar sizes in `history`, but want to convert it to hourly or daily.
+
+```csharp
+// fetch historical quotes from your favorite feed
+IEnumerable<TQuote> minuteBarHistory = GetHistoryFromFeed("MSFT");
+
+// aggregate into larger bars
+IEnumerable<Quote> dayBarHistory = 
+  minuteBarHistory.Aggregate(PeriodSize.Day);
+```
+
+:warning: **Warning**: Partially populated period windows at the beginning, end, and market open/close points in `history` can be misleading when aggregated.  For example, if you are aggregating intraday minute bars into 15 minute bars and there is a single 4:00pm minute bar at the end, the resulting 4:00pm 15-minute bar will only have one minute of data in it whereas the previous 3:45pm bar will have all 15 minutes of bars aggregated (3:45-3:59pm).
+
+#### PeriodSize options (for newSize)
+
+- `PeriodSize.Week`
+- `PeriodSize.Day`
+- `PeriodSize.FourHours`
+- `PeriodSize.TwoHours`
+- `PeriodSize.OneHour`
+- `PeriodSize.ThirtyMinutes`
+- `PeriodSize.FifteenMinutes`
+- `PeriodSize.FiveMinutes`
+- `PeriodSize.ThreeMinutes`
+- `PeriodSize.TwoMinutes`
+- `PeriodSize.OneMinute`

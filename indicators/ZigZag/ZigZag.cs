@@ -10,7 +10,7 @@ namespace Skender.Stock.Indicators
         /// <include file='./info.xml' path='indicator/*' />
         /// 
         public static IEnumerable<ZigZagResult> GetZigZag<TQuote>(
-            IEnumerable<TQuote> history,
+            this IEnumerable<TQuote> history,
             ZigZagType type = ZigZagType.Close,
             decimal percentChange = 5)
             where TQuote : IQuote
@@ -232,14 +232,8 @@ namespace Skender.Stock.Indicators
                 lastLowPoint.Value = nextPoint.Value;
             }
 
-            // nothing to do if first line
-            if (priorPoint.Index == 1)
-            {
-                return;
-            }
-
-            // handle error case
-            if (nextPoint.Index == priorPoint.Index)
+            // nothing to do if first line or no-span case
+            if (priorPoint.Index == 1 || nextPoint.Index == priorPoint.Index)
             {
                 return;
             }

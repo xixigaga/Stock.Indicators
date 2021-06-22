@@ -14,8 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
             int lookbackPeriod = 14;
-            List<VortexResult> results
-                = Indicator.GetVortex(history, lookbackPeriod).ToList();
+            List<VortexResult> results = history.GetVortex(lookbackPeriod).ToList();
 
             // assertions
 
@@ -51,20 +50,6 @@ namespace Internal.Tests
         {
             IEnumerable<VortexResult> r = Indicator.GetVortex(historyBad, 20);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(15 + qty);
-                IEnumerable<VortexResult> r = Indicator.GetVortex(h, 14);
-
-                VortexResult l = r.LastOrDefault();
-                Console.WriteLine("VI+ on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Pvi);
-            }
         }
 
         [TestMethod]

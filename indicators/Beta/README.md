@@ -19,9 +19,9 @@ IEnumerable<BetaResult> results =
 | `historyEval` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical [evaluation stock] Quotes data should be at any consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) in the lookback period.  Must be greater than 0 to calculate; however we suggest a larger period for statistically appropriate sample size.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N` periods of history.  You must have at least the same matching date elements of `historyMarket`.  Exception will be thrown if not matched.  Historical price quotes should have a consistent frequency (day, hour, minute, etc).
+You must have at least `N` periods of history.  You must have at least the same matching date elements of `historyMarket`.  Exception will be thrown if not matched.  Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 
 ## Response
 
@@ -41,7 +41,7 @@ The first `N-1` periods will have `null` values since there's not enough data to
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> historyTSLA = GetHistoryFromFeed("TSLA");
 IEnumerable<Quote> historySPX = GetHistoryFromFeed("SPX");
 

@@ -19,7 +19,7 @@ namespace Internal.Tests
             int smoothPeriod = 1;
 
             List<StochRsiResult> results =
-                Indicator.GetStochRsi(history, rsiPeriod, stochPeriod, signalPeriod, smoothPeriod)
+                history.GetStochRsi(rsiPeriod, stochPeriod, signalPeriod, smoothPeriod)
                 .ToList();
 
             // assertions
@@ -89,20 +89,6 @@ namespace Internal.Tests
         {
             IEnumerable<StochRsiResult> r = Indicator.GetStochRsi(historyBad, 15, 20, 3, 2);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities.Where(x => x <= 502))
-            {
-                IEnumerable<Quote> h = HistoryTestData.Get(110 + qty);
-                IEnumerable<StochRsiResult> r = Indicator.GetStochRsi(h, 14, 14, 3, 1);
-
-                StochRsiResult l = r.LastOrDefault();
-                Console.WriteLine("SRSI on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.StochRsi);
-            }
         }
 
         [TestMethod]

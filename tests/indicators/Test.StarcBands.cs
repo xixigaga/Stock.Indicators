@@ -19,7 +19,7 @@ namespace Internal.Tests
             int lookbackPeriod = Math.Max(smaPeriod, atrPeriod);
 
             List<StarcBandsResult> results =
-                Indicator.GetStarcBands(history, smaPeriod, multiplier, atrPeriod)
+                history.GetStarcBands(smaPeriod, multiplier, atrPeriod)
                 .ToList();
 
             // assertions
@@ -63,20 +63,6 @@ namespace Internal.Tests
         {
             IEnumerable<StarcBandsResult> r = Indicator.GetStarcBands(historyBad, 10, 3, 15);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(200 + qty);
-                IEnumerable<StarcBandsResult> r = Indicator.GetStarcBands(h, 100);
-
-                StarcBandsResult l = r.LastOrDefault();
-                Console.WriteLine("STARC UPPER on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.UpperBand);
-            }
         }
 
         [TestMethod]

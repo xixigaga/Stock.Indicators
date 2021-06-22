@@ -14,8 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
 
-            List<HtlResult> results = Indicator.GetHtTrendline(history)
-                .ToList();
+            List<HtlResult> results = history.GetHtTrendline().ToList();
 
             // assertions
 
@@ -68,20 +67,6 @@ namespace Internal.Tests
             IEnumerable<Quote> penny = HistoryTestData.GetPenny();
             IEnumerable<HtlResult> r = Indicator.GetHtTrendline(penny);
             Assert.AreEqual(533, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(100 + qty);
-                IEnumerable<HtlResult> r = Indicator.GetHtTrendline(h);
-
-                HtlResult l = r.LastOrDefault();
-                Console.WriteLine("HTL on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Trendline);
-            }
         }
 
         [TestMethod]

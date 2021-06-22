@@ -10,7 +10,7 @@ namespace Skender.Stock.Indicators
         /// <include file='./info.xml' path='indicator/*' />
         /// 
         public static IEnumerable<FcbResult> GetFcb<TQuote>(
-            IEnumerable<TQuote> history,
+            this IEnumerable<TQuote> history,
             int windowSpan = 2)
             where TQuote : IQuote
         {
@@ -39,8 +39,8 @@ namespace Skender.Stock.Indicators
                 {
                     FractalResult fp = fractals[i - windowSpan];
 
-                    upperLine = (fp.FractalBear != null) ? (decimal)fp.FractalBear : upperLine;
-                    lowerLine = (fp.FractalBull != null) ? (decimal)fp.FractalBull : lowerLine;
+                    upperLine = (fp.FractalBear != null) ? fp.FractalBear : upperLine;
+                    lowerLine = (fp.FractalBull != null) ? fp.FractalBull : lowerLine;
 
                     r.UpperBand = upperLine;
                     r.LowerBand = lowerLine;

@@ -14,8 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
 
-            List<ObvResult> results = Indicator.GetObv(history)
-                .ToList();
+            List<ObvResult> results = history.GetObv().ToList();
 
             // assertions
 
@@ -29,7 +28,7 @@ namespace Internal.Tests
             Assert.AreEqual(null, r1.ObvSma);
 
             ObvResult r2 = results[501];
-            Assert.AreEqual(539843504, r2.Obv);
+            Assert.AreEqual(539843504m, r2.Obv);
             Assert.AreEqual(null, r2.ObvSma);
         }
 

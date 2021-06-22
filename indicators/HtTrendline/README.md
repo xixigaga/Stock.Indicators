@@ -7,18 +7,15 @@ Created by John Ehlers, the Hilbert Transform Instantaneous Trendline is a 5-per
 
 ```csharp
 // usage
-IEnumerable<HtlResult> results = Indicator.GetHtTrendline(history);
+IEnumerable<HtlResult> results =
+  history.GetHtTrendline();
 ```
 
-## Parameters
+## Historical quotes requirements
 
-| name | type | notes
-| -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
+Since this indicator has a warmup period, you must have at least `100` periods of `history`.
 
-### Minimum history requirements
-
-Since this indicator has a warmup period, you must supply at least `100` periods of `history`.
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -41,11 +38,11 @@ The first `6` periods will have `null` values for `SmoothPrice` since there's no
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("MSFT");
 
 // calculate HT Trendline
-IEnumerable<HtlResult> results = Indicator.GetHtTrendline(history);
+IEnumerable<HtlResult> results = history.GetHtTrendline();
 
 // use results as needed
 HtlResult result = results.LastOrDefault();

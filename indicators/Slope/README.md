@@ -7,19 +7,21 @@
 
 ```csharp
 // usage
-IEnumerable<SlopeResult> results = Indicator.GetSlope(history, lookbackPeriod);  
+IEnumerable<SlopeResult> results =
+  history.GetSlope(lookbackPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) for the linear regression.  Must be greater than 0.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N` periods of `history`.
+You must have at least `N` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -43,11 +45,11 @@ The first `N-1` periods will have `null` values for `Slope` since there's not en
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> historySPX = GetHistoryFromFeed("SPX");
 
 // calculate 20-period Slope
-IEnumerable<SlopeResult> results = Indicator.GetSlope(history,20);
+IEnumerable<SlopeResult> results = history.GetSlope(20);
 
 // use results as needed
 SlopeResult result = results.LastOrDefault();

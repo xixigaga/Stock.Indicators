@@ -8,21 +8,22 @@ It can indicate a buy/sell signal or a trailing stop when the trend changes.
 
 ```csharp
 // usage
-IEnumerable<SuperTrendResult> results
-  = Indicator.GetSuperTrend(history, lookbackPeriod, multiplier);  
+IEnumerable<SuperTrendResult> results =
+  history.GetSuperTrend(lookbackPeriod, multiplier);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) for the ATR evaluation.  Must be greater than 1 and is usually set between 7 and 14.  Default is 10.
 | `multiplier` | decimal | Multiplier sets the ATR band width.  Must be greater than 0 and is usually set around 2 to 3.  Default is 3.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N+100` periods of `history`.  Since this uses a smoothing technique, we recommend you use at least `N+250` periods prior to the intended usage date for optimal precision.
+You must have at least `N+100` periods of `history`.  Since this uses a smoothing technique, we recommend you use at least `N+250` periods prior to the intended usage date for optimal precision.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -49,12 +50,12 @@ We always return the same number of elements as there are in the historical quot
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate SuperTrend(14,3)
 IEnumerable<SuperTrendResult> results
-  = Indicator.GetSuperTrend(history,14,3);
+  = history.GetSuperTrend(14,3);
 
 // use results as needed
 SuperTrendResult r = results.LastOrDefault();

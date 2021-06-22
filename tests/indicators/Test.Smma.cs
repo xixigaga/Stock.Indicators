@@ -13,9 +13,7 @@ namespace Internal.Tests
         public void Standard()
         {
             int lookbackPeriod = 20;
-
-            List<SmmaResult> results = Indicator.GetSmma(history, lookbackPeriod)
-                .ToList();
+            List<SmmaResult> results = history.GetSmma(lookbackPeriod).ToList();
 
             // assertions
 
@@ -34,20 +32,6 @@ namespace Internal.Tests
             Assert.AreEqual(214.58319m, Math.Round(results[21].Smma.Value, 5));
             Assert.AreEqual(225.78071m, Math.Round(results[100].Smma.Value, 5));
             Assert.AreEqual(255.67462m, Math.Round(results[501].Smma.Value, 5));
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(110 + qty);
-                IEnumerable<SmmaResult> r = Indicator.GetSmma(h, 15);
-
-                SmmaResult l = r.LastOrDefault();
-                Console.WriteLine("SMMA(15) on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Smma);
-            }
         }
 
         [TestMethod]

@@ -19,7 +19,7 @@ namespace Internal.Tests
             int startPeriod = Math.Max(rsiPeriod, Math.Max(streakPeriod, rankPeriod)) + 2;
 
             List<ConnorsRsiResult> results1 =
-                Indicator.GetConnorsRsi(history, rsiPeriod, streakPeriod, rankPeriod)
+                history.GetConnorsRsi(rsiPeriod, streakPeriod, rankPeriod)
                 .ToList();
 
             // assertions
@@ -37,7 +37,7 @@ namespace Internal.Tests
             Assert.AreEqual(74.7662m, Math.Round((decimal)r1.ConnorsRsi, 4));
 
             // different parameters
-            List<ConnorsRsiResult> results2 = Indicator.GetConnorsRsi(history, 14, 20, 10).ToList();
+            List<ConnorsRsiResult> results2 = history.GetConnorsRsi(14, 20, 10).ToList();
             ConnorsRsiResult r2 = results2[501];
             Assert.AreEqual(42.0773m, Math.Round((decimal)r2.RsiClose, 4));
             Assert.AreEqual(52.7386m, Math.Round((decimal)r2.RsiStreak, 4));
@@ -50,20 +50,6 @@ namespace Internal.Tests
         {
             IEnumerable<ConnorsRsiResult> r = Indicator.GetConnorsRsi(historyBad, 4, 3, 25);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(103 + qty);
-                IEnumerable<ConnorsRsiResult> r = Indicator.GetConnorsRsi(h, 3, 2, 10);
-
-                ConnorsRsiResult l = r.LastOrDefault();
-                Console.WriteLine("CRSI on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.ConnorsRsi);
-            }
         }
 
         [TestMethod]

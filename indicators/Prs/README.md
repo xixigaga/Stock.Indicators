@@ -7,24 +7,27 @@
 
 ```csharp
 // usage
-IEnumerable<PrsResult> results = Indicator.GetPrs(historyBase, historyEval);  
+IEnumerable<PrsResult> results =
+  historyBase.GetPrs(historyEval);  
 
-// usage with optional SMA of PRS (shown above)
-IEnumerable<PrsResult> results = Indicator.GetPrs(historyBase, historyEval, smaPeriod);  
+// usage with optional lookback period and SMA of PRS (shown above)
+IEnumerable<PrsResult> results =
+  historyBase.GetPrs(historyEval, lookbackPeriod, smaPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `historyBase` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | This is usually market index data, but could be any baseline data that you might use for comparison.
-| `historyEval` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical quotes for evaluation.  You must supply the same number of periods as `historyBase`.
+| `historyEval` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical quotes for evaluation.  You must have the same number of periods as `historyBase`.
 | `lookbackPeriod` | int | Optional.  Number of periods (`N`) to lookback to compute % difference.  Must be greater than 0 if specified or `null`.
 | `smaPeriod` | int | Optional.  Number of periods (`S`) in the SMA lookback period for `Prs`.  Must be greater than 0.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N` periods of `historyBase` to calculate `PrsPercent` if `lookbackPeriod` is specified; otherwise, you must specify at least `S+1` periods.  More than the minimum is typically specified.  For this indicator, the elements must match (e.g. the `n`th elements must be the same date).  An `Exception` will be thrown for mismatch dates.  Historical price quotes should have a consistent frequency (day, hour, minute, etc).
+You must have at least `N` periods of `historyBase` to calculate `PrsPercent` if `lookbackPeriod` is specified; otherwise, you must specify at least `S+1` periods.  More than the minimum is typically specified.  For this indicator, the elements must match (e.g. the `n`th elements must be the same date).  An `Exception` will be thrown for mismatch dates.  Historical price quotes should have a consistent frequency (day, hour, minute, etc).
+
+`historyBase` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -46,18 +49,18 @@ The `N` periods will have `null` values for `PrsPercent` and the first `S-1` per
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> historySPX = GetHistoryFromFeed("SPX");
 IEnumerable<Quote> historyTSLA = GetHistoryFromFeed("TSLA");
 
-// calculate 20-period Prs
-IEnumerable<PrResult> results = Indicator.GetPrs(historySPX,historyTSLA,14);
+// calculate 14-period PRS
+IEnumerable<PrResult> results = historySPX.GetPrs(historyTSLA,14);
 
 // use results as needed
 PrResult result = results.LastOrDefault();
-Console.WriteLine("PR(SPX,TSLA,14) on {0} was {1}", result.Date, result.PriceRatio);
+Console.WriteLine("PRS(SPX,TSLA,14) on {0} was {1}", result.Date, result.PriceRatio);
 ```
 
 ```bash
-PR(SPX,TSLA,14) on 12/31/2018 was 1.36
+PRS(SPX,TSLA,14) on 12/31/2018 was 1.36
 ```

@@ -14,8 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
 
-            List<T3Result> results = Indicator.GetT3(history, 5, 0.7)
-                .ToList();
+            List<T3Result> results = history.GetT3(5, 0.7).ToList();
 
             // assertions
 
@@ -49,20 +48,6 @@ namespace Internal.Tests
         {
             IEnumerable<T3Result> r = Indicator.GetT3(historyBad);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(6 * 20 + 100 + qty);
-                IEnumerable<T3Result> r = Indicator.GetT3(h, 20);
-
-                T3Result l = r.LastOrDefault();
-                Console.WriteLine("T3 on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.T3);
-            }
         }
 
         [TestMethod]

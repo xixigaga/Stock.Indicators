@@ -1,4 +1,4 @@
-﻿# Pivot Points
+# Pivot Points
 
 [Pivot Points](https://en.wikipedia.org/wiki/Pivot_point_(technical_analysis)) depict support and resistance levels, based on the prior lookback window.  You can specify window size (e.g. month, week, day, etc).
 See also the alternative [Rolling Pivot Points](../RollingPivots/README.md#content) variant for a modern update that uses a rolling window.
@@ -9,20 +9,21 @@ See also the alternative [Rolling Pivot Points](../RollingPivots/README.md#conte
 ```csharp
 // usage
 IEnumerable<PivotPointResult> results =
-  Indicator.GetPivotPoints(history, windowSize, pointType);  
+  history.GetPivotPoints(windowSize, pointType);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc)
 | `windowSize` | PeriodSize | Size of the lookback window
 | `pointType` | PivotPointType | Type of Pivot Point.  Default is `PivotPointType.Standard`
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `2` windows of `history`.  For example, if you specify a `Week` window size, you need at least 14 calendar days of `history`.
+You must have at least `2` windows of `history`.  For example, if you specify a `Week` window size, you need at least 14 calendar days of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ### PeriodSize options (for windowSize)
 
@@ -31,7 +32,7 @@ You must supply at least `2` windows of `history`.  For example, if you specify 
 | `PeriodSize.Month` | Use the prior month's data to calculate current month's Pivot Points
 | `PeriodSize.Week` | [..] weekly
 | `PeriodSize.Day` | [..] daily.  Commonly used for intraday data.
-| `PeriodSize.Hour` | [..] hourly
+| `PeriodSize.OneHour` | [..] hourly
 
 ### PivotPointType options
 
@@ -69,12 +70,12 @@ The first window will have `null` values since there's not enough data to calcul
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate Woodie-style month-based Pivot Points
 IEnumerable<PivotPointResult> results =
-  Indicator.GetPivotPoints(history,PeriodSize.Month,PivotPointType.Woodie);
+  history.GetPivotPoints(PeriodSize.Month,PivotPointType.Woodie);
 
 // use results as needed
 PivotPointsResult result = results.LastOrDefault();

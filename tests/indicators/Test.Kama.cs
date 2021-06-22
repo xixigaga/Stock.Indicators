@@ -17,7 +17,7 @@ namespace Internal.Tests
             int fastPeriod = 2;
             int slowPeriod = 30;
 
-            List<KamaResult> results = Indicator.GetKama(history, erPeriod, fastPeriod, slowPeriod)
+            List<KamaResult> results = history.GetKama(erPeriod, fastPeriod, slowPeriod)
                 .ToList();
 
             // assertions
@@ -63,20 +63,6 @@ namespace Internal.Tests
         {
             IEnumerable<KamaResult> r = Indicator.GetKama(historyBad);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(105 + qty);
-                IEnumerable<KamaResult> r = Indicator.GetKama(h, 10);
-
-                KamaResult l = r.LastOrDefault();
-                Console.WriteLine("KAMA on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Kama);
-            }
         }
 
         [TestMethod]

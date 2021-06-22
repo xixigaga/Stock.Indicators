@@ -6,19 +6,21 @@ Created by E.W. Dreiss, the Choppiness Index measures the trendiness or choppine
 
 ```csharp
 // usage
-IEnumerable<ChopResult> results = Indicator.GetChop(history, lookbackPeriod);  
+IEnumerable<ChopResult> results =
+  history.GetChop(lookbackPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) for the lookback evaluation.  Must be greater than 1.  Default is 14.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N+1` periods of `history`.
+You must have at least `N+1` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -38,11 +40,11 @@ The first `N` periods will have `null` values since there's not enough data to c
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate CHOP(14)
-IEnumerable<ChopResult> results = Indicator.GetChop(history,14);
+IEnumerable<ChopResult> results = history.GetChop(14);
 
 // use results as needed
 ChopResult result = results.LastOrDefault();

@@ -16,7 +16,7 @@ namespace Internal.Tests
             int fastPeriod = 3;
             int slowPeriod = 10;
 
-            List<ChaikinOscResult> results = Indicator.GetChaikinOsc(history, fastPeriod, slowPeriod)
+            List<ChaikinOscResult> results = history.GetChaikinOsc(fastPeriod, slowPeriod)
                 .ToList();
 
             // assertions
@@ -39,20 +39,6 @@ namespace Internal.Tests
         {
             IEnumerable<ChaikinOscResult> r = Indicator.GetChaikinOsc(historyBad, 5, 15);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(110 + qty);
-                IEnumerable<ChaikinOscResult> r = Indicator.GetChaikinOsc(h);
-
-                ChaikinOscResult l = r.LastOrDefault();
-                Console.WriteLine("CHAIKIN OSC on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Oscillator);
-            }
         }
 
         [TestMethod]

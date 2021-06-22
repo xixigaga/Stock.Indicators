@@ -18,7 +18,7 @@ namespace Internal.Tests
             int signalPeriod = 9;
 
             List<PvoResult> results =
-                Indicator.GetPvo(history, fastPeriod, slowPeriod, signalPeriod)
+                history.GetPvo(fastPeriod, slowPeriod, signalPeriod)
                 .ToList();
 
             // assertions
@@ -62,20 +62,6 @@ namespace Internal.Tests
         {
             IEnumerable<PvoResult> r = Indicator.GetPvo(historyBad, 10, 20, 5);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(130 + qty);
-                IEnumerable<PvoResult> r = Indicator.GetPvo(h);
-
-                PvoResult l = r.LastOrDefault();
-                Console.WriteLine("PVO on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Pvo);
-            }
         }
 
         [TestMethod]

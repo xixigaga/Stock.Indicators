@@ -14,9 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
             int lookbackPeriod = 14;
-
-            List<RsiResult> results = Indicator.GetRsi(history, lookbackPeriod)
-                .ToList();
+            List<RsiResult> results = history.GetRsi(lookbackPeriod).ToList();
 
             // assertions
 
@@ -65,22 +63,6 @@ namespace Internal.Tests
         {
             IEnumerable<RsiResult> r = Indicator.GetRsi(historyBad, 20);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            int lookbackPeriod = 14;
-
-            foreach (int qty in convergeQuantities.Where(q => q > 100 - lookbackPeriod))
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(lookbackPeriod + qty);
-                IEnumerable<RsiResult> r = Indicator.GetRsi(h, lookbackPeriod);
-
-                RsiResult l = r.LastOrDefault();
-                Console.WriteLine("RSI({0}) on {1:d} with {2,4} periods: {3:N8}",
-                    lookbackPeriod, l.Date, h.Count(), l.Rsi);
-            }
         }
 
         [TestMethod]

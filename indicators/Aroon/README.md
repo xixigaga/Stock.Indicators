@@ -7,19 +7,21 @@ Created by Tushar Chande, [Aroon](https://school.stockcharts.com/doku.php?id=tec
 
 ```csharp
 // usage
-IEnumerable<AroonResult> results = Indicator.GetAroon(history, lookbackPeriod);  
+IEnumerable<AroonResult> results =
+  history.GetAroon(lookbackPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) for the lookback evaluation.  Must be greater than 0.  Default is 25.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N` periods of `history`.
+You must have at least `N` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -41,11 +43,11 @@ The first `N-1` periods will have `null` Aroon values since there's not enough d
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate Aroon(25)
-IEnumerable<AroonResult> results = Indicator.GetAroon(history,25);
+IEnumerable<AroonResult> results = history.GetAroon(25);
 
 // use results as needed
 AroonResult result = results.LastOrDefault();

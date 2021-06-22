@@ -7,20 +7,21 @@ Created by Etienne Botes and Douglas Siepman, the [Vortex Indicator](https://en.
 
 ```csharp
 // usage
-IEnumerable<VortexResult> results
-  = Indicator.GetVortex(history, lookbackPeriod);  
+IEnumerable<VortexResult> results =
+  history.GetVortex(lookbackPeriod);  
 ```
 
 ## Parameters
 
 | name | type | notes
 | -- |-- |--
-| `history` | IEnumerable\<[TQuote](../../docs/GUIDE.md#historical-quotes)\> | Historical price quotes should have a consistent frequency (day, hour, minute, etc).
 | `lookbackPeriod` | int | Number of periods (`N`) to consider.  Must be greater than 1 and is usually between 14 and 30.
 
-### Minimum history requirements
+### Historical quotes requirements
 
-You must supply at least `N+1` periods of `history`.
+You must have at least `N+1` periods of `history`.
+
+`history` is an `IEnumerable<TQuote>` collection of historical price quotes.  It should have a consistent frequency (day, hour, minute, etc).  See [the Guide](../../docs/GUIDE.md) for more information.
 
 ## Response
 
@@ -41,11 +42,11 @@ The first `N` periods will have `null` values for VI since there's not enough da
 ## Example
 
 ```csharp
-// fetch historical quotes from your favorite feed, in Quote format
+// fetch historical quotes from your feed (your method)
 IEnumerable<Quote> history = GetHistoryFromFeed("SPY");
 
 // calculate 14-period VI
-IEnumerable<VortexResult> results = Indicator.GetVortex(history,14);
+IEnumerable<VortexResult> results = history.GetVortex(14);
 
 // use results as needed
 VortexResult result = results.LastOrDefault();

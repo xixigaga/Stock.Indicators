@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Skender.Stock.Indicators;
 
 [assembly: CLSCompliant(true)]
-namespace External.Tests
+namespace External.Other
 {
     internal class MyQuote : Quote
     {
@@ -50,15 +50,7 @@ namespace External.Tests
             IEnumerable<Quote> history = HistoryTestData.Get();
             history.Validate();
 
-            Indicator.GetSma(history, 5);
-        }
-
-        [TestMethod]
-        public void ValidateHistoryOld()
-        {
-            IEnumerable<Quote> history = HistoryTestData.Get();
-            history = Cleaners.ValidateHistory(history);
-
+            history.GetSma(6);
             Indicator.GetSma(history, 5);
         }
 
@@ -120,7 +112,7 @@ namespace External.Tests
                 })
                 .ToList();
 
-            List<EmaResult> results = Indicator.GetEma(myGenericHistory, 20)
+            List<EmaResult> results = myGenericHistory.GetEma(20)
                 .ToList();
 
             // assertions
@@ -142,6 +134,38 @@ namespace External.Tests
         }
 
         [TestMethod]
+        public void CustomQuoteAggregate()
+        {
+            List<MyGenericQuote> myGenericHistory = HistoryTestData.GetIntraday()
+                .Select(x => new MyGenericQuote
+                {
+                    CloseDate = x.Date,
+                    Open = x.Open,
+                    High = x.High,
+                    Low = x.Low,
+                    CloseValue = x.Close,
+                    Volume = x.Volume,
+                    MyOtherProperty = 123456
+                })
+                .ToList();
+
+            List<Quote> historyList = myGenericHistory
+                .Aggregate(PeriodSize.TwoHours)
+                .ToList();
+
+            // assertions
+
+            // proper quantities
+            // should always be the same number of results as there is history
+            Assert.AreEqual(20, historyList.Count);
+
+            // sample values
+            Quote r19 = historyList[19];
+            Assert.AreEqual(369.04m, r19.Low);
+        }
+
+
+        [TestMethod]
         public void DerivedIndicatorClass()
         {
             // can use a derive Indicator class
@@ -159,7 +183,7 @@ namespace External.Tests
         public void DerivedIndicatorClassLinq()
         {
             IEnumerable<Quote> history = HistoryTestData.Get();
-            IEnumerable<EmaResult> emaResults = Indicator.GetEma(history, 14);
+            IEnumerable<EmaResult> emaResults = history.GetEma(14);
 
             // can use a derive Indicator class using Linq
 
@@ -204,5 +228,8 @@ namespace External.Tests
             EmaResult r = emaResults.Find(findDate);
             Assert.AreEqual(249.3519m, Math.Round((decimal)r.Ema, 4));
         }
+
+
+
     }
 }

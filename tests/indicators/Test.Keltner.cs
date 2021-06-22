@@ -18,7 +18,7 @@ namespace Internal.Tests
             int atrPeriod = 10;
 
             List<KeltnerResult> results =
-                Indicator.GetKeltner(history, emaPeriod, multiplier, atrPeriod)
+                history.GetKeltner(emaPeriod, multiplier, atrPeriod)
                 .ToList();
 
             // assertions
@@ -52,20 +52,6 @@ namespace Internal.Tests
         {
             IEnumerable<KeltnerResult> r = Indicator.GetKeltner(historyBad, 10, 3, 15);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(200 + qty);
-                IEnumerable<KeltnerResult> r = Indicator.GetKeltner(h, 100);
-
-                KeltnerResult l = r.LastOrDefault();
-                Console.WriteLine("KC-UP on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.UpperBand);
-            }
         }
 
         [TestMethod]

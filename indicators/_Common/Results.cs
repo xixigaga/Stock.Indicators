@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Skender.Stock.Indicators
 {
-    // RESULTS
+    // RESULT MODELS
 
     public interface IResultBase
     {
@@ -18,6 +18,8 @@ namespace Skender.Stock.Indicators
     }
 
 
+    // HELPER FUNCTIONS
+
     public static class IndicatorResults
     {
 
@@ -26,9 +28,7 @@ namespace Skender.Stock.Indicators
             DateTime lookupDate)
             where TResult : IResultBase
         {
-            return results
-                .Where(x => x.Date == lookupDate)
-                .FirstOrDefault();
+            return results.FirstOrDefault(x => x.Date == lookupDate);
         }
     }
 }

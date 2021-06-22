@@ -14,7 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
             int lookbackPeriod = 14;
-            List<AtrResult> results = Indicator.GetAtr(history, lookbackPeriod).ToList();
+            List<AtrResult> results = history.GetAtr(lookbackPeriod).ToList();
 
             // assertions
 
@@ -55,20 +55,6 @@ namespace Internal.Tests
         {
             IEnumerable<AtrResult> r = Indicator.GetAtr(historyBad, 20);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(115 + qty);
-                IEnumerable<AtrResult> r = Indicator.GetAtr(h);
-
-                AtrResult l = r.LastOrDefault();
-                Console.WriteLine("ATR on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Atr);
-            }
         }
 
         [TestMethod]

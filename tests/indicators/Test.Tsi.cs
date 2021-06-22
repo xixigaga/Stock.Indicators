@@ -14,8 +14,7 @@ namespace Internal.Tests
         public void Standard()
         {
 
-            List<TsiResult> results = Indicator.GetTsi(history, 25, 13, 7)
-                .ToList();
+            List<TsiResult> results = history.GetTsi(25, 13, 7).ToList();
 
             // assertions
 
@@ -56,20 +55,6 @@ namespace Internal.Tests
         {
             IEnumerable<TsiResult> r = Indicator.GetTsi(historyBad);
             Assert.AreEqual(502, r.Count());
-        }
-
-        [TestMethod]
-        public void Convergence()
-        {
-            foreach (int qty in convergeQuantities)
-            {
-                IEnumerable<Quote> h = HistoryTestData.GetLong(135 + qty);
-                IEnumerable<TsiResult> r = Indicator.GetTsi(h);
-
-                TsiResult l = r.LastOrDefault();
-                Console.WriteLine("TSI on {0:d} with {1,4} periods: {2:N8}",
-                    l.Date, h.Count(), l.Tsi);
-            }
         }
 
         [TestMethod]

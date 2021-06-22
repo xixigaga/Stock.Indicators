@@ -1,4 +1,4 @@
-# Stock Indicators
+# Stock.Indicators for .NET
 
 [![NuGet package](https://img.shields.io/nuget/v/skender.stock.indicators?color=blue&logo=NuGet&label=NuGet%20Package)](https://www.nuget.org/packages/Skender.Stock.Indicators)
 [![Nuget](https://img.shields.io/nuget/dt/skender.stock.indicators?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/Skender.Stock.Indicators)
@@ -6,7 +6,7 @@
 [![code coverage](https://img.shields.io/azure-devops/coverage/skender/stock.indicators/21/master?logo=AzureDevOps&label=Code%20Coverage)](https://dev.azure.com/skender/Stock.Indicators/_build/latest?definitionId=21&branchName=master&view=codecoverage-tab)
 [![CodeQL](https://github.com/DaveSkender/Stock.Indicators/workflows/CodeQL/badge.svg)](https://github.com/DaveSkender/Stock.Indicators/security/code-scanning)
 
-[Stock.Indicators](https://www.nuget.org/packages/Skender.Stock.Indicators) is a .NET library that produces technical indicators.  Send in historical price quotes and get back desired indicators such as moving averages, Relative Strength Index, Stochastic Oscillator, Parabolic SAR, etc.  Nothing more.
+[Stock.Indicators for .NET](https://www.nuget.org/packages/Skender.Stock.Indicators) is a C# library package that produces financial market technical indicators.  Send in historical price quotes and get back desired indicators such as moving averages, Relative Strength Index, Stochastic Oscillator, Parabolic SAR, etc.  Nothing more.
 
 It can be used in any market analysis software using standard OHLCV price quotes for equities, commodities, forex, cryptocurrencies, and others.  We had private trading algorithms, machine learning, and charting systems in mind when originally creating this community library.
 
@@ -32,7 +32,7 @@ using Skender.Stock.Indicators;
 [..]  // prerequisite: get quote history from your own source
 
 // example: get 20-period simple moving average
-IEnumerable<SmaResult> results = Indicator.GetSma(history,20);
+IEnumerable<SmaResult> results = history.GetSma(20);
 ```
 
 See the [guide](https://daveskender.github.io/Stock.Indicators/docs/GUIDE.html) and the [full list of indicators and overlays](https://daveskender.github.io/Stock.Indicators/docs/INDICATORS.html) for more information.
@@ -56,6 +56,13 @@ This NuGet package is an open-source community project.  If you want to report b
 
 This repository uses the standard Apache 2.0 open-source license.  Please review the [license](https://opensource.org/licenses/Apache-2.0) before using or contributing to the software.
 
-## Contact us
+## :heart: Patronage
+
+If you or your organization use any of my projects or like what I’m doing, please add a :star: on the [GitHub Repo](https://github.com/DaveSkender/Stock.Indicators) as a token of appreciation.
+If you want to buy me a beer or are interest in ongoing support as a patron, [become a sponsor](https://github.com/sponsors/DaveSkender).
+Patronage motivates continued maintenance and evolution of open-source projects, and to inspire new ones.
+Thank you for your support!
+
+## :phone: Contact us
 
 [Start a new feature discussion, ask a question](https://github.com/DaveSkender/Stock.Indicators/discussions), or [submit an issue](https://github.com/DaveSkender/Stock.Indicators/issues) if it is publicly relevant.  You can also direct message [@daveskender](https://twitter.com/messages/compose?recipient_id=27475431).

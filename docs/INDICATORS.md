@@ -5,7 +5,7 @@
 - [Overbought/oversold oscillators](#overboughtoversold-oscillators)
 - [Stop and reverse](#stop-and-reverse)
 - [Candlestick patterns](#candlestick-patterns)
-- [Volume-based momentum](#volume-based-momentum)
+- [Volume-based](#volume-based)
 - [Moving averages](#moving-averages)
 - [Price transforms](#price-transforms)
 - [Price characteristics](#price-characteristics)
@@ -39,6 +39,7 @@
 - [ConnorsRSI](../indicators/ConnorsRsi/README.md#content)
 - [Commodity Channel Index](../indicators/Cci/README.md#content)
 - [Relative Strength Index (RSI)](../indicators/Rsi/README.md#content)
+- [ROC with Bands](../indicators/Roc/README.md#roc-with-bands)
 - [Stochastic Oscillator](../indicators/Stoch/README.md#content) and [KDJ Index](../indicators/Stoch/README.md#content)
 - [Stochastic RSI](../indicators/StochRsi/README.md#content)
 - [Ultimate Oscillator](../indicators/Ultimate/README.md#content)
@@ -54,12 +55,13 @@
 
 - [Williams Fractal](../indicators/Fractal/README.md#content)
 
-## Volume-based momentum
+## Volume-based
 
 - [Accumulation/Distribution Line (ADL)](../indicators/Adl/README.md#content)
 - [Chaikin Money Flow (CMF)](../indicators/Cmf/README.md#content)
 - [Chaikin Oscillator](../indicators/ChaikinOsc/README.md#content)
 - [Force Index](../indicators/ForceIndex/README.md#content)
+- [Klinger Volume Oscillator](../indicators/Kvo/README.md#content)
 - [Money Flow Index (MFI)](../indicators/Mfi/README.md#content)
 - [On-balance Volume (OBV)](../indicators/Obv/README.md#content)
 - [Percentage Volume Oscillator (PVO)](../indicators/Pvo/README.md#content)
@@ -96,10 +98,11 @@
 - [Balance of Power](../indicators/Bop/README.md#content)
 - [Bull and Bear Power](../indicators/ElderRay/README.md#content)
 - [Choppiness Index](../indicators/Chop/README.md#content)
+- [Ehlers Fisher Transform](../indicators/FisherTransform/README.md#content)
 - [Momentum Oscillator](../indicators/Roc/README.md#content)
 - [Price (Comparative) Relative Strength](../indicators/Prs/README.md#content)
 - [Price Momentum Oscillator](../indicators/Pmo/README.md#content)
-- [Rate of Change](../indicators/Roc/README.md#content)
+- [Rate of Change](../indicators/Roc/README.md#content) and [ROC with Bands](../indicators/Roc/README.md#roc-with-bands)
 - [True Strength Index](../indicators/Tsi/README.md#content)
 - [Ulcer Index](../indicators/UlcerIndex/README.md#content)
 

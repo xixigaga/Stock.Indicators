@@ -9,7 +9,7 @@ namespace Skender.Stock.Indicators
         /// <include file='./info.xml' path='indicator/*' />
         /// 
         public static IEnumerable<RsiResult> GetRsi<TQuote>(
-            IEnumerable<TQuote> history,
+            this IEnumerable<TQuote> history,
             int lookbackPeriod = 14)
             where TQuote : IQuote
         {
@@ -22,7 +22,7 @@ namespace Skender.Stock.Indicators
         }
 
 
-        private static IEnumerable<RsiResult> CalcRsi(List<BasicData> bdList, int lookbackPeriod = 14)
+        private static IEnumerable<RsiResult> CalcRsi(List<BasicData> bdList, int lookbackPeriod)
         {
 
             // check parameter arguments
